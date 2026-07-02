@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { fetchNetworkOverview, fetchStations, fetchWarnings, runSimulation } from '@/services/api'
+import { fetchNetworkOverview, fetchRiverNetworkSegments, fetchStations, fetchWarnings, runSimulation } from '@/services/api'
 import { mockNetwork, mockSimulation, mockStations, mockWarnings } from '@/data/mock'
 import type {
   MapLayerKey,
@@ -44,12 +44,13 @@ export const usePlatformStore = defineStore('platform', () => {
   )
 
   async function loadDashboard() {
-    const [networkData, stationData, warningData] = await Promise.all([
+    const [networkData, riverSegments, stationData, warningData] = await Promise.all([
       fetchNetworkOverview(),
+      fetchRiverNetworkSegments(),
       fetchStations(),
       fetchWarnings(),
     ])
-    network.value = networkData
+    network.value = riverSegments.length > 0 ? { ...networkData, segments: riverSegments } : networkData
     stations.value = stationData
     warnings.value = warningData
   }

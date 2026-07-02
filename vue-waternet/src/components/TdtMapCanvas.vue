@@ -9,6 +9,7 @@ type TdtStatus = 'idle' | 'loading' | 'ready' | 'missing-token' | 'failed'
 declare global {
   interface Window {
     T?: any
+    TMAP_SATELLITE_MAP?: any
     __tdtLoadPromise?: Promise<void>
   }
 }
@@ -64,6 +65,7 @@ async function initializeMap() {
     const T = window.T
     map = new T.Map(mapContainer.value)
     map.centerAndZoom(new T.LngLat(120.274, 31.486), 12)
+    setSatelliteMapType()
     map.enableScrollWheelZoom?.()
     status.value = 'ready'
     statusMessage.value = ''
@@ -71,6 +73,13 @@ async function initializeMap() {
   } catch (error) {
     status.value = 'failed'
     statusMessage.value = error instanceof Error ? error.message : '天地图加载失败'
+  }
+}
+
+function setSatelliteMapType() {
+  const satelliteMapType = window.TMAP_SATELLITE_MAP
+  if (satelliteMapType && map?.setMapType) {
+    map.setMapType(satelliteMapType)
   }
 }
 
