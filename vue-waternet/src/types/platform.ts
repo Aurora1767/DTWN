@@ -12,9 +12,13 @@ export interface Coordinate {
 export interface RiverSegment {
   code: string
   name: string
+  reachId?: number
   lengthMeters: number
   widthMeters: number
   manningN: number
+  chezy?: number
+  dx?: number
+  bedElevation?: number
   startNodeCode: string
   endNodeCode: string
   coordinates: Coordinate[]
@@ -28,6 +32,9 @@ export interface WaterNode {
   lat: number
   initialWaterLevel: number
   boundaryType: string
+  connectedNodeCodes?: string[]
+  connectedSegmentCodes?: string[]
+  connectedReachIds?: number[]
 }
 
 export interface HydraulicStructure {
@@ -138,6 +145,62 @@ export interface NetworkOverview {
   segments: RiverSegment[]
   nodes: WaterNode[]
   structures: HydraulicStructure[]
+}
+
+export interface EnvironmentSnapshot {
+  weatherText: string
+  temperature: string
+  windSpeed: string
+  windScale: string
+  observedAt: string
+}
+
+export interface WaterStationSnapshot {
+  stationCode: string
+  stationName: string
+  waterLevel: number
+  flowRate: number
+  observedAt: string
+}
+
+export interface WaterHistoryPoint {
+  date: string
+  waterLevel: number
+  flowRate: number
+  rainfall: number
+}
+
+export interface WaterQuantityOverview {
+  status: string
+  timestamp: string
+  live: boolean
+  stations: WaterStationSnapshot[]
+  historyByCode: Record<string, WaterHistoryPoint[]>
+}
+
+export interface RainfallHistoryPoint {
+  time: string
+  upstream: number
+  downstream: number
+  rainfall: number
+}
+
+export interface RainfallOverview {
+  status: string
+  timestamp: string
+  live: boolean
+  points: RainfallHistoryPoint[]
+}
+
+export type HydroChannelKey = 'taihu' | 'canal-north' | 'canal-south'
+
+export interface HydroChannelValue {
+  value: number
+  timestamp: string
+}
+
+export interface HydroScenarioSnapshot {
+  channels: Record<HydroChannelKey, HydroChannelValue>
 }
 
 export interface ApiResponse<T> {

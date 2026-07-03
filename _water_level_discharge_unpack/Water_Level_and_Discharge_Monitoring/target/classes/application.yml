@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: water-level-discharge-monitoring
+
+# 水利系统数据抓取与缓存自定义配置
+hydro:
+  cache-path: "upload/hydro_data/"
+  flow:
+    base-url: "http://swsq.jswater.org.cn:9088"
+    chart-url-pattern: "/jsswxxSSI/static/map/chart/0/{itemid}.png"
+    table-url-pattern: "/jsswxxSSI/static/map/chart/0/{itemid}_list.png"
+    stations:
+      - key: "zhihu"
+        name: "直湖港闸"
+        code: "700de6cf4fce4b158bc1ad5c34d7229e"
+      - key: "wangting_flow"
+        name: "望亭立交流量"
+        code: "33d10b545cc94711a2ce7797960ec2d87"
+      - key: "yixing"
+        name: "宜兴南流量"
+        code: "fd02f5801b7a4e88ab5741d609e89d15"
+  water:
+    url: "http://58.247.45.108:8020//RegionalWaterAnalysis/getWA_Water_Stcd"
+    stations:
+      - key: "luoshe"
+        name: "洛社"
+        code: "63202800"
+      - key: "wuxi"
+        name: "无锡大"
+        code: "63202851"
+      - key: "wangting_tai"
+        name: "望亭太"
+        code: "63201300"
+      - key: "wangting_lijiao"
+        name: "望亭立交水位"
+        code: "63202911"
+      - key: "wangting_da"
+        name: "望亭大水位"
+        code: "63202900"

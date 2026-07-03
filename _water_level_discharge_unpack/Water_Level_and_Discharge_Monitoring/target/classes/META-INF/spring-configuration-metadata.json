@@ -1,0 +1,70 @@
+{
+  "groups": [
+    {
+      "name": "hydro",
+      "type": "com.hydro.monitoring.config.HydroProperties",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties"
+    },
+    {
+      "name": "hydro.flow",
+      "type": "com.hydro.monitoring.config.HydroProperties$FlowConfig",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties",
+      "sourceMethod": "public com.hydro.monitoring.config.HydroProperties.FlowConfig getFlow() "
+    },
+    {
+      "name": "hydro.water",
+      "type": "com.hydro.monitoring.config.HydroProperties$WaterConfig",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties",
+      "sourceMethod": "public com.hydro.monitoring.config.HydroProperties.WaterConfig getWater() "
+    }
+  ],
+  "properties": [
+    {
+      "name": "hydro.cache-path",
+      "type": "java.lang.String",
+      "description": "本地缓存根路径",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties"
+    },
+    {
+      "name": "hydro.flow-station-map",
+      "type": "java.util.Map<java.lang.String,com.hydro.monitoring.config.HydroProperties$StationInfo>",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties"
+    },
+    {
+      "name": "hydro.flow.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties$FlowConfig"
+    },
+    {
+      "name": "hydro.flow.chart-url-pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties$FlowConfig"
+    },
+    {
+      "name": "hydro.flow.stations",
+      "type": "java.util.List<com.hydro.monitoring.config.HydroProperties$StationInfo>",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties$FlowConfig"
+    },
+    {
+      "name": "hydro.flow.table-url-pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties$FlowConfig"
+    },
+    {
+      "name": "hydro.water-station-map",
+      "type": "java.util.Map<java.lang.String,com.hydro.monitoring.config.HydroProperties$StationInfo>",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties"
+    },
+    {
+      "name": "hydro.water.stations",
+      "type": "java.util.List<com.hydro.monitoring.config.HydroProperties$StationInfo>",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties$WaterConfig"
+    },
+    {
+      "name": "hydro.water.url",
+      "type": "java.lang.String",
+      "sourceType": "com.hydro.monitoring.config.HydroProperties$WaterConfig"
+    }
+  ],
+  "hints": []
+}

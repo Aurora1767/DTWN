@@ -1,0 +1,1381 @@
+{
+  "type": "SurfaceShorelineMapping",
+  "crs": "urn:ogc:def:crs:OGC:1.3:CRS84",
+  "summary": {
+    "numberedSurfaceCount": 27,
+    "numberedShorelineCount": 28,
+    "matchedNumberedCount": 27,
+    "missingSurfaceIds": [
+      6
+    ],
+    "missingShorelineIds": [],
+    "hasBackboneSurface": true,
+    "hasBackboneShoreline": true,
+    "hasBackboneSupplementSurface": true,
+    "hasBackboneSupplementCenterline": true,
+    "backboneSupplementMatchedCenterlineFids": [
+      3
+    ]
+  },
+  "entries": [
+    {
+      "areaId": 1,
+      "areaCode": "AREA_01",
+      "riverCode": "REAL_RIVER_01",
+      "surfaceCode": "SURFACE_01",
+      "shorelineCode": "SHORELINE_01",
+      "surfaceFile": "面1.geojson",
+      "shorelineFile": "岸线1.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 17.85,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 115,
+        "center": [
+          120.33850052429341,
+          31.52371265227905
+        ],
+        "bbox": [
+          120.33216899063272,
+          31.521824349434212,
+          120.34819829683012,
+          31.52552083260131
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 2,
+        "pointCount": 80,
+        "center": [
+          120.33868583254089,
+          31.523684814034606
+        ],
+        "bbox": [
+          120.33216899063272,
+          31.521824349434212,
+          120.34819829683012,
+          31.52552083260131
+        ]
+      }
+    },
+    {
+      "areaId": 2,
+      "areaCode": "AREA_02",
+      "riverCode": "REAL_RIVER_02",
+      "surfaceCode": "SURFACE_02",
+      "shorelineCode": "SHORELINE_02",
+      "surfaceFile": "面2.geojson",
+      "shorelineFile": "岸线2.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 1.54,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 35,
+        "center": [
+          120.33961619920642,
+          31.524249614543013
+        ],
+        "bbox": [
+          120.33843236338224,
+          31.523383018651234,
+          120.34092819959285,
+          31.52489036686733
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 24,
+        "center": [
+          120.33961949268398,
+          31.52423599088561
+        ],
+        "bbox": [
+          120.33843236338224,
+          31.523383018651234,
+          120.34092819959285,
+          31.52489036686733
+        ]
+      }
+    },
+    {
+      "areaId": 3,
+      "areaCode": "AREA_03",
+      "riverCode": "REAL_RIVER_03",
+      "surfaceCode": "SURFACE_03",
+      "shorelineCode": "SHORELINE_03",
+      "surfaceFile": "面3.geojson",
+      "shorelineFile": "岸线3.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 4.02,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 23,
+        "center": [
+          120.33793022176965,
+          31.524612220847892
+        ],
+        "bbox": [
+          120.33725233271372,
+          31.523647115040554,
+          120.33852446544617,
+          31.52571489208324
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 17,
+        "center": [
+          120.33792744262264,
+          31.524648549601384
+        ],
+        "bbox": [
+          120.33725233271372,
+          31.523647115040554,
+          120.33852446544617,
+          31.52571489208324
+        ]
+      }
+    },
+    {
+      "areaId": 4,
+      "areaCode": "AREA_04",
+      "riverCode": "REAL_RIVER_04",
+      "surfaceCode": "SURFACE_04",
+      "shorelineCode": "SHORELINE_04",
+      "surfaceFile": "面4.geojson",
+      "shorelineFile": "岸线4.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 14.86,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 24,
+        "center": [
+          120.33554500794543,
+          31.52602488808142
+        ],
+        "bbox": [
+          120.33490654071056,
+          31.524536891378645,
+          120.33614018948202,
+          31.527557792044067
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 15,
+        "center": [
+          120.33558593396316,
+          31.526154604350687
+        ],
+        "bbox": [
+          120.33490654071056,
+          31.524536891378645,
+          120.33614018948202,
+          31.527557792044067
+        ]
+      }
+    },
+    {
+      "areaId": 5,
+      "areaCode": "AREA_05",
+      "riverCode": "REAL_RIVER_05",
+      "surfaceCode": "SURFACE_05",
+      "shorelineCode": "SHORELINE_05",
+      "surfaceFile": "面5.geojson",
+      "shorelineFile": "岸线5.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 8.49,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 39,
+        "center": [
+          120.3322098153232,
+          31.523257025127332
+        ],
+        "bbox": [
+          120.33184840206684,
+          31.52228800739664,
+          120.33256561626075,
+          31.52438742871282
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 31,
+        "center": [
+          120.33220588214179,
+          31.523180319956484
+        ],
+        "bbox": [
+          120.33184840206684,
+          31.52228800739664,
+          120.33256561626075,
+          31.52438742871282
+        ]
+      }
+    },
+    {
+      "areaId": 6,
+      "areaCode": "AREA_06",
+      "riverCode": "REAL_RIVER_06",
+      "surfaceCode": null,
+      "shorelineCode": "SHORELINE_06",
+      "surfaceFile": null,
+      "shorelineFile": "岸线6.geojson",
+      "status": "missingSurface",
+      "centerDistanceMetersApprox": null,
+      "surface": {
+        "geometryTypes": [],
+        "featureCount": 0,
+        "pointCount": 0,
+        "center": null,
+        "bbox": null
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 42,
+        "center": [
+          120.33368300274398,
+          31.520656671572965
+        ],
+        "bbox": [
+          120.32758044991411,
+          31.517130874493013,
+          120.33757742849647,
+          31.52357431813412
+        ]
+      }
+    },
+    {
+      "areaId": 7,
+      "areaCode": "AREA_07",
+      "riverCode": "REAL_RIVER_07",
+      "surfaceCode": "SURFACE_07",
+      "shorelineCode": "SHORELINE_07",
+      "surfaceFile": "面7.geojson",
+      "shorelineFile": "岸线7.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 2.03,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 23,
+        "center": [
+          120.33763189574064,
+          31.522300414638927
+        ],
+        "bbox": [
+          120.33731150000207,
+          31.52193720208713,
+          120.33784306872144,
+          31.52287908946135
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 18,
+        "center": [
+          120.33763489819846,
+          31.52228222279542
+        ],
+        "bbox": [
+          120.33731150000207,
+          31.52193720208713,
+          120.33784306872144,
+          31.52287908946135
+        ]
+      }
+    },
+    {
+      "areaId": 8,
+      "areaCode": "AREA_08",
+      "riverCode": "REAL_RIVER_08",
+      "surfaceCode": "SURFACE_08",
+      "shorelineCode": "SHORELINE_08",
+      "surfaceFile": "面8.geojson",
+      "shorelineFile": "岸线8.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 53.84,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 47,
+        "center": [
+          120.3356518224673,
+          31.514651031235594
+        ],
+        "bbox": [
+          120.33298212645983,
+          31.508379164338198,
+          120.33758074359419,
+          31.519354273581175
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 32,
+        "center": [
+          120.33550471767133,
+          31.515121401586704
+        ],
+        "bbox": [
+          120.33298212645983,
+          31.508379164338205,
+          120.33758074359419,
+          31.519354273581175
+        ]
+      }
+    },
+    {
+      "areaId": 9,
+      "areaCode": "AREA_09",
+      "riverCode": "REAL_RIVER_09",
+      "surfaceCode": "SURFACE_09",
+      "shorelineCode": "SHORELINE_09",
+      "surfaceFile": "面9.geojson",
+      "shorelineFile": "岸线9.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 91.84,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 56,
+        "center": [
+          120.34438761135927,
+          31.510358776954977
+        ],
+        "bbox": [
+          120.33179111195263,
+          31.50750987883192,
+          120.35694362443925,
+          31.51552479962792
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 40,
+        "center": [
+          120.34344516821083,
+          31.510170194376634
+        ],
+        "bbox": [
+          120.33179111195263,
+          31.50750987883192,
+          120.35694362443925,
+          31.51552479962792
+        ]
+      }
+    },
+    {
+      "areaId": 10,
+      "areaCode": "AREA_10",
+      "riverCode": "REAL_RIVER_10",
+      "surfaceCode": "SURFACE_10",
+      "shorelineCode": "SHORELINE_10",
+      "surfaceFile": "面10.geojson",
+      "shorelineFile": "岸线10.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 126.27,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 133,
+        "center": [
+          120.34588353111961,
+          31.50611895725893
+        ],
+        "bbox": [
+          120.33695865829273,
+          31.500067842270525,
+          120.35796272734105,
+          31.5145613685429
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 123,
+        "center": [
+          120.34481109069299,
+          31.505442915360575
+        ],
+        "bbox": [
+          120.33695865829273,
+          31.500067842270525,
+          120.35796272734105,
+          31.5145613685429
+        ]
+      }
+    },
+    {
+      "areaId": 11,
+      "areaCode": "AREA_11",
+      "riverCode": "REAL_RIVER_11",
+      "surfaceCode": "SURFACE_11",
+      "shorelineCode": "SHORELINE_11",
+      "surfaceFile": "面11.geojson",
+      "shorelineFile": "岸线11.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 10.04,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 32,
+        "center": [
+          120.3556126032697,
+          31.5083047427883
+        ],
+        "bbox": [
+          120.35369426561127,
+          31.5054082119333,
+          120.35836554175316,
+          31.511376807596434
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 31,
+        "center": [
+          120.3555388337828,
+          31.50836978370079
+        ],
+        "bbox": [
+          120.35369426561127,
+          31.5054082119333,
+          120.35836554175316,
+          31.511376807596434
+        ]
+      }
+    },
+    {
+      "areaId": 12,
+      "areaCode": "AREA_12",
+      "riverCode": "REAL_RIVER_12",
+      "surfaceCode": "SURFACE_12",
+      "shorelineCode": "SHORELINE_12",
+      "surfaceFile": "面12.geojson",
+      "shorelineFile": "岸线12.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 102.01,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 155,
+        "center": [
+          120.35266310639226,
+          31.50143108180801
+        ],
+        "bbox": [
+          120.33649849189428,
+          31.494953837536546,
+          120.36379582759326,
+          31.509212160761397
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 7,
+        "pointCount": 153,
+        "center": [
+          120.35165158367782,
+          31.501119124680365
+        ],
+        "bbox": [
+          120.33649849189428,
+          31.494953837536546,
+          120.36379582759326,
+          31.509212160761397
+        ]
+      }
+    },
+    {
+      "areaId": 13,
+      "areaCode": "AREA_13",
+      "riverCode": "REAL_RIVER_13",
+      "surfaceCode": "SURFACE_13",
+      "shorelineCode": "SHORELINE_13",
+      "surfaceFile": "面13.geojson",
+      "shorelineFile": "岸线13.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 3.27,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 20,
+        "center": [
+          120.35096561662132,
+          31.50188824431381
+        ],
+        "bbox": [
+          120.35023951646554,
+          31.499985254230328,
+          120.35209712428963,
+          31.503262072792257
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 17,
+        "center": [
+          120.35100007474551,
+          31.501888347588146
+        ],
+        "bbox": [
+          120.35023951646554,
+          31.499994105281953,
+          120.35209712428963,
+          31.503262072792257
+        ]
+      }
+    },
+    {
+      "areaId": 14,
+      "areaCode": "AREA_14",
+      "riverCode": "REAL_RIVER_14",
+      "surfaceCode": "SURFACE_14",
+      "shorelineCode": "SHORELINE_14",
+      "surfaceFile": "面14.geojson",
+      "shorelineFile": "岸线14.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 7.57,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 29,
+        "center": [
+          120.36090085176869,
+          31.503055538017314
+        ],
+        "bbox": [
+          120.3583853124842,
+          31.50050682193928,
+          120.36366133836043,
+          31.505440856576552
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 24,
+        "center": [
+          120.36095880622928,
+          31.503008448422282
+        ],
+        "bbox": [
+          120.3583853124842,
+          31.50050682193928,
+          120.36366133836043,
+          31.505440856576552
+        ]
+      }
+    },
+    {
+      "areaId": 15,
+      "areaCode": "AREA_15",
+      "riverCode": "REAL_RIVER_15",
+      "surfaceCode": "SURFACE_15",
+      "shorelineCode": "SHORELINE_15",
+      "surfaceFile": "面15.geojson",
+      "shorelineFile": "岸线15.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 7.35,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 38,
+        "center": [
+          120.35550578014609,
+          31.497711077857737
+        ],
+        "bbox": [
+          120.35384224070536,
+          31.49575585124157,
+          120.35688061994,
+          31.500342587465806
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 26,
+        "center": [
+          120.3555263638589,
+          31.49764698900418
+        ],
+        "bbox": [
+          120.35384224070536,
+          31.49575585124157,
+          120.35688061994,
+          31.500342587465806
+        ]
+      }
+    },
+    {
+      "areaId": 16,
+      "areaCode": "AREA_16",
+      "riverCode": "REAL_RIVER_16",
+      "surfaceCode": "SURFACE_16",
+      "shorelineCode": "SHORELINE_16",
+      "surfaceFile": "面16.geojson",
+      "shorelineFile": "岸线16.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 19.83,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 27,
+        "center": [
+          120.3486269632853,
+          31.49500804754478
+        ],
+        "bbox": [
+          120.34787397794696,
+          31.49362491657131,
+          120.34912852631135,
+          31.497694089149967
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 20,
+        "center": [
+          120.34866409653839,
+          31.494831519047644
+        ],
+        "bbox": [
+          120.34787397794696,
+          31.49362491657131,
+          120.34912852631135,
+          31.497694089149967
+        ]
+      }
+    },
+    {
+      "areaId": 17,
+      "areaCode": "AREA_17",
+      "riverCode": "REAL_RIVER_17",
+      "surfaceCode": "SURFACE_17",
+      "shorelineCode": "SHORELINE_17",
+      "surfaceFile": "面17.geojson",
+      "shorelineFile": "岸线17.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 38.04,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 178,
+        "center": [
+          120.35653399278051,
+          31.49729598325908
+        ],
+        "bbox": [
+          120.33803491547815,
+          31.491433642892922,
+          120.36859488746532,
+          31.504778009405484
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 123,
+        "center": [
+          120.35686575668522,
+          31.49748900495559
+        ],
+        "bbox": [
+          120.33803491547815,
+          31.49140131685202,
+          120.36859488746532,
+          31.504778009405484
+        ]
+      }
+    },
+    {
+      "areaId": 18,
+      "areaCode": "AREA_18",
+      "riverCode": "REAL_RIVER_18",
+      "surfaceCode": "SURFACE_18",
+      "shorelineCode": "SHORELINE_18",
+      "surfaceFile": "面18.geojson",
+      "shorelineFile": "岸线18.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 6.02,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 20,
+        "center": [
+          120.36968424987565,
+          31.50032465677607
+        ],
+        "bbox": [
+          120.36724683279205,
+          31.49807938111736,
+          120.37154340995636,
+          31.502023834988197
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 16,
+        "center": [
+          120.36970735480705,
+          31.500375396304438
+        ],
+        "bbox": [
+          120.36724683279205,
+          31.49807938111736,
+          120.37154340995636,
+          31.502023834988197
+        ]
+      }
+    },
+    {
+      "areaId": 19,
+      "areaCode": "AREA_19",
+      "riverCode": "REAL_RIVER_19",
+      "surfaceCode": "SURFACE_19",
+      "shorelineCode": "SHORELINE_19",
+      "surfaceFile": "面19.geojson",
+      "shorelineFile": "岸线19.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 10.1,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 70,
+        "center": [
+          120.36902767419997,
+          31.495048024373798
+        ],
+        "bbox": [
+          120.36354833207506,
+          31.48998953485896,
+          120.37345577199672,
+          31.500432207709906
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 45,
+        "center": [
+          120.36910711064644,
+          31.494987190333827
+        ],
+        "bbox": [
+          120.36354833207506,
+          31.489989534858964,
+          120.37345577199672,
+          31.500432207709906
+        ]
+      }
+    },
+    {
+      "areaId": 20,
+      "areaCode": "AREA_20",
+      "riverCode": "REAL_RIVER_20",
+      "surfaceCode": "SURFACE_20",
+      "shorelineCode": "SHORELINE_20",
+      "surfaceFile": "面20.geojson",
+      "shorelineFile": "岸线20.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 19.77,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 26,
+        "center": [
+          120.35887718962537,
+          31.49384802638453
+        ],
+        "bbox": [
+          120.35689133219229,
+          31.49212898420777,
+          120.360842067886,
+          31.495664904753497
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 17,
+        "center": [
+          120.35873390785015,
+          31.493977880406728
+        ],
+        "bbox": [
+          120.35689133219229,
+          31.49212898420777,
+          120.360842067886,
+          31.495664904753497
+        ]
+      }
+    },
+    {
+      "areaId": 21,
+      "areaCode": "AREA_21",
+      "riverCode": "REAL_RIVER_21",
+      "surfaceCode": "SURFACE_21",
+      "shorelineCode": "SHORELINE_21",
+      "surfaceFile": "面21.geojson",
+      "shorelineFile": "岸线21.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 11.84,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 64,
+        "center": [
+          120.35492336762654,
+          31.48829339857698
+        ],
+        "bbox": [
+          120.35278839424069,
+          31.484258039203993,
+          120.35901516025834,
+          31.490919207692485
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 52,
+        "center": [
+          120.3548576129761,
+          31.48838443578321
+        ],
+        "bbox": [
+          120.35278839424069,
+          31.484258039203993,
+          120.35901516025834,
+          31.490919207692485
+        ]
+      }
+    },
+    {
+      "areaId": 22,
+      "areaCode": "AREA_22",
+      "riverCode": "REAL_RIVER_22",
+      "surfaceCode": "SURFACE_22",
+      "shorelineCode": "SHORELINE_22",
+      "surfaceFile": "面22.geojson",
+      "shorelineFile": "岸线22.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 12.76,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 49,
+        "center": [
+          120.35151408866511,
+          31.49125486117946
+        ],
+        "bbox": [
+          120.34957388073272,
+          31.48951819197748,
+          120.35333754739138,
+          31.493273267909657
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 45,
+        "center": [
+          120.35160880890878,
+          31.49117290506481
+        ],
+        "bbox": [
+          120.34957388073272,
+          31.48951819197748,
+          120.35333754739138,
+          31.493273267909657
+        ]
+      }
+    },
+    {
+      "areaId": 23,
+      "areaCode": "AREA_23",
+      "riverCode": "REAL_RIVER_23",
+      "surfaceCode": "SURFACE_23",
+      "shorelineCode": "SHORELINE_23",
+      "surfaceFile": "面23.geojson",
+      "shorelineFile": "岸线23.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 22.92,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 50,
+        "center": [
+          120.343589658697,
+          31.48950582261692
+        ],
+        "bbox": [
+          120.33879898735053,
+          31.48717774106434,
+          120.34642504907428,
+          31.490177725938057
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 44,
+        "center": [
+          120.34383015202322,
+          31.489487777936436
+        ],
+        "bbox": [
+          120.33879898735053,
+          31.48717774106434,
+          120.34642504907428,
+          31.490177725938057
+        ]
+      }
+    },
+    {
+      "areaId": 24,
+      "areaCode": "AREA_24",
+      "riverCode": "REAL_RIVER_24",
+      "surfaceCode": "SURFACE_24",
+      "shorelineCode": "SHORELINE_24",
+      "surfaceFile": "面24.geojson",
+      "shorelineFile": "岸线24.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 45.08,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 82,
+        "center": [
+          120.35015268273088,
+          31.482528078909365
+        ],
+        "bbox": [
+          120.34931854596842,
+          31.475739289663238,
+          120.35304044043136,
+          31.48750835747952
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 69,
+        "center": [
+          120.35004502566912,
+          31.482130867909675
+        ],
+        "bbox": [
+          120.34931854596842,
+          31.475739289663238,
+          120.35304044043136,
+          31.48750835747952
+        ]
+      }
+    },
+    {
+      "areaId": 25,
+      "areaCode": "AREA_25",
+      "riverCode": "REAL_RIVER_25",
+      "surfaceCode": "SURFACE_25",
+      "shorelineCode": "SHORELINE_25",
+      "surfaceFile": "面25.geojson",
+      "shorelineFile": "岸线25.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 44.32,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 56,
+        "center": [
+          120.36436501193182,
+          31.48723488617298
+        ],
+        "bbox": [
+          120.35423550648112,
+          31.484130206779806,
+          120.3731878972233,
+          31.490560698584844
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 42,
+        "center": [
+          120.36391455981374,
+          31.487129387792372
+        ],
+        "bbox": [
+          120.35423550648112,
+          31.484130206779806,
+          120.37296137566108,
+          31.490560698584844
+        ]
+      }
+    },
+    {
+      "areaId": 26,
+      "areaCode": "AREA_26",
+      "riverCode": "REAL_RIVER_26",
+      "surfaceCode": "SURFACE_26",
+      "shorelineCode": "SHORELINE_26",
+      "surfaceFile": "面26.geojson",
+      "shorelineFile": "岸线26.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 4.49,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 27,
+        "center": [
+          120.36270551560621,
+          31.488514222810277
+        ],
+        "bbox": [
+          120.36118860273439,
+          31.486681693530787,
+          120.36337710476137,
+          31.489934813461577
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 17,
+        "center": [
+          120.36269505742601,
+          31.488474593766757
+        ],
+        "bbox": [
+          120.36118860273439,
+          31.486681693530787,
+          120.36337710476137,
+          31.489934813461577
+        ]
+      }
+    },
+    {
+      "areaId": 27,
+      "areaCode": "AREA_27",
+      "riverCode": "REAL_RIVER_27",
+      "surfaceCode": "SURFACE_27",
+      "shorelineCode": "SHORELINE_27",
+      "surfaceFile": "面27.geojson",
+      "shorelineFile": "岸线27.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 28.18,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 46,
+        "center": [
+          120.36384646401581,
+          31.48265706753144
+        ],
+        "bbox": [
+          120.36311535617286,
+          31.477692650258213,
+          120.36496778964042,
+          31.486616516090134
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 41,
+        "center": [
+          120.36381289770443,
+          31.482910329025405
+        ],
+        "bbox": [
+          120.36311535617286,
+          31.477692650258213,
+          120.36496778964042,
+          31.486616516090134
+        ]
+      }
+    },
+    {
+      "areaId": 28,
+      "areaCode": "AREA_28",
+      "riverCode": "REAL_RIVER_28",
+      "surfaceCode": "SURFACE_28",
+      "shorelineCode": "SHORELINE_28",
+      "surfaceFile": "面28.geojson",
+      "shorelineFile": "岸线28.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 33.47,
+      "surface": {
+        "geometryTypes": [
+          "MultiPolygon"
+        ],
+        "featureCount": 1,
+        "pointCount": 37,
+        "center": [
+          120.35401840471282,
+          31.480012334175502
+        ],
+        "bbox": [
+          120.3535211269359,
+          31.475643449362455,
+          120.35439861890002,
+          31.484258039203993
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 1,
+        "pointCount": 32,
+        "center": [
+          120.35403460011707,
+          31.479709842136174
+        ],
+        "bbox": [
+          120.3535211269359,
+          31.475643449362455,
+          120.35439861890002,
+          31.484258039203993
+        ]
+      }
+    },
+    {
+      "areaId": "backbone",
+      "areaCode": "BACKBONE",
+      "riverCode": "BACKBONE",
+      "surfaceCode": "BACKBONE_SURFACE",
+      "shorelineCode": "BACKBONE_SHORELINE",
+      "surfaceFile": "骨干面.geojson",
+      "shorelineFile": "骨干岸线.geojson",
+      "status": "matched",
+      "centerDistanceMetersApprox": 1585.85,
+      "surface": {
+        "geometryTypes": [
+          "Polygon"
+        ],
+        "featureCount": 3,
+        "pointCount": 72,
+        "center": [
+          120.3386769409591,
+          31.49959228322063
+        ],
+        "bbox": [
+          120.32560199315492,
+          31.46233494738047,
+          120.39419334204787,
+          31.532034644027064
+        ]
+      },
+      "shoreline": {
+        "geometryTypes": [
+          "MultiLineString"
+        ],
+        "featureCount": 9,
+        "pointCount": 167,
+        "center": [
+          120.35088505027082,
+          31.48979832808909
+        ],
+        "bbox": [
+          120.32560199315492,
+          31.46233494738047,
+          120.39419334204787,
+          31.532034644027064
+        ]
+      }
+    },
+    {
+      "areaId": "backboneSupplement",
+      "areaCode": "BACKBONE_SUPPLEMENT",
+      "riverCode": "BACKBONE_SUPPLEMENT",
+      "surfaceCode": "BACKBONE_SUPPLEMENT_SURFACE",
+      "shorelineCode": null,
+      "centerlineCode": "BACKBONE_SUPPLEMENT_CENTERLINE",
+      "surfaceFile": "骨干河网面补.geojson",
+      "shorelineFile": null,
+      "centerlineFile": "骨干河网中心线.geojson",
+      "status": "matchedCenterline",
+      "matchedCenterlineFids": [
+        3
+      ],
+      "centerlineFeatureDistances": [
+        {
+          "fid": 1,
+          "centerDistanceMetersApprox": 4403.93
+        },
+        {
+          "fid": 2,
+          "centerDistanceMetersApprox": 2841.29
+        },
+        {
+          "fid": 3,
+          "centerDistanceMetersApprox": 76.82
+        }
+      ],
+      "centerDistanceMetersApprox": 76.82,
+      "surface": {
+        "pointCount": 91,
+        "bbox": [
+          120.34294701801241,
+          31.47541873350048,
+          120.3792751356159,
+          31.494947173941526
+        ],
+        "center": [
+          120.36350772564165,
+          31.4804297562705
+        ],
+        "featureCount": 1,
+        "geometryTypes": [
+          "MultiPolygon"
+        ]
+      },
+      "centerline": {
+        "pointCount": 52,
+        "bbox": [
+          120.32578360063712,
+          31.4623999674943,
+          120.39386514364443,
+          31.531416809342797
+        ],
+        "center": [
+          120.35151504050499,
+          31.489375235661676
+        ],
+        "featureCount": 3,
+        "geometryTypes": [
+          "LineString"
+        ]
+      }
+    }
+  ]
+}

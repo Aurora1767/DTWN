@@ -1,0 +1,822 @@
+﻿{
+    "N01":  {
+                "nodeId":  1,
+                "connectedNodeCodes":  [
+                                           "N02"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_01"
+                                          ],
+                "connectedReachIds":  [
+                                          1
+                                      ]
+            },
+    "N02":  {
+                "nodeId":  2,
+                "connectedNodeCodes":  [
+                                           "N01",
+                                           "N50",
+                                           "N53"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_01"
+                                          ],
+                "connectedReachIds":  [
+                                          1,
+                                          43,
+                                          44
+                                      ]
+            },
+    "N03":  {
+                "nodeId":  3,
+                "connectedNodeCodes":  [
+                                           "N04"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_02"
+                                          ],
+                "connectedReachIds":  [
+                                          2
+                                      ]
+            },
+    "N04":  {
+                "nodeId":  4,
+                "connectedNodeCodes":  [
+                                           "N03",
+                                           "N46",
+                                           "N54"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_02"
+                                          ],
+                "connectedReachIds":  [
+                                          2,
+                                          38,
+                                          39
+                                      ]
+            },
+    "N05":  {
+                "nodeId":  5,
+                "connectedNodeCodes":  [
+                                           "N06",
+                                           "N21",
+                                           "N28"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_03"
+                                          ],
+                "connectedReachIds":  [
+                                          3,
+                                          32,
+                                          49
+                                      ]
+            },
+    "N06":  {
+                "nodeId":  6,
+                "connectedNodeCodes":  [
+                                           "N05"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_03"
+                                          ],
+                "connectedReachIds":  [
+                                          3
+                                      ]
+            },
+    "N07":  {
+                "nodeId":  7,
+                "connectedNodeCodes":  [
+                                           "N25"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          53
+                                      ]
+            },
+    "N08":  {
+                "nodeId":  8,
+                "connectedNodeCodes":  [
+                                           "N24"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_07"
+                                          ],
+                "connectedReachIds":  [
+                                          7
+                                      ]
+            },
+    "N09":  {
+                "nodeId":  9,
+                "connectedNodeCodes":  [
+                                           "N23"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_06"
+                                          ],
+                "connectedReachIds":  [
+                                          6
+                                      ]
+            },
+    "N10":  {
+                "nodeId":  10,
+                "connectedNodeCodes":  [
+                                           "N22"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_05"
+                                          ],
+                "connectedReachIds":  [
+                                          5
+                                      ]
+            },
+    "N11":  {
+                "nodeId":  11,
+                "connectedNodeCodes":  [
+                                           "N25"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_08"
+                                          ],
+                "connectedReachIds":  [
+                                          8
+                                      ]
+            },
+    "N12":  {
+                "nodeId":  12,
+                "connectedNodeCodes":  [
+                                           "N26"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_10"
+                                          ],
+                "connectedReachIds":  [
+                                          10
+                                      ]
+            },
+    "N13":  {
+                "nodeId":  13,
+                "connectedNodeCodes":  [
+                                           "N33"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          57
+                                      ]
+            },
+    "N14":  {
+                "nodeId":  14,
+                "connectedNodeCodes":  [
+                                           "N37"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_16"
+                                          ],
+                "connectedReachIds":  [
+                                          16
+                                      ]
+            },
+    "N15":  {
+                "nodeId":  15,
+                "connectedNodeCodes":  [
+                                           "N54"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_21"
+                                          ],
+                "connectedReachIds":  [
+                                          21
+                                      ]
+            },
+    "N16":  {
+                "nodeId":  16,
+                "connectedNodeCodes":  [
+                                           "N42"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_23"
+                                          ],
+                "connectedReachIds":  [
+                                          23
+                                      ]
+            },
+    "N17":  {
+                "nodeId":  17,
+                "connectedNodeCodes":  [
+                                           "N49"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_24"
+                                          ],
+                "connectedReachIds":  [
+                                          24
+                                      ]
+            },
+    "N18":  {
+                "nodeId":  18,
+                "connectedNodeCodes":  [
+                                           "N50"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_26"
+                                          ],
+                "connectedReachIds":  [
+                                          26
+                                      ]
+            },
+    "N19":  {
+                "nodeId":  19,
+                "connectedNodeCodes":  [
+                                           "N47"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          29
+                                      ]
+            },
+    "N20":  {
+                "nodeId":  20,
+                "connectedNodeCodes":  [
+                                           "N53"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_27"
+                                          ],
+                "connectedReachIds":  [
+                                          27
+                                      ]
+            },
+    "N21":  {
+                "nodeId":  21,
+                "connectedNodeCodes":  [
+                                           "N05",
+                                           "N22",
+                                           "N29"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_04"
+                                          ],
+                "connectedReachIds":  [
+                                          4,
+                                          32,
+                                          33
+                                      ]
+            },
+    "N22":  {
+                "nodeId":  22,
+                "connectedNodeCodes":  [
+                                           "N10",
+                                           "N21",
+                                           "N23"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_04",
+                                              "REAL_RIVER_05"
+                                          ],
+                "connectedReachIds":  [
+                                          4,
+                                          5,
+                                          50
+                                      ]
+            },
+    "N23":  {
+                "nodeId":  23,
+                "connectedNodeCodes":  [
+                                           "N09",
+                                           "N22",
+                                           "N24",
+                                           "N26"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_06",
+                                              "REAL_RIVER_09"
+                                          ],
+                "connectedReachIds":  [
+                                          6,
+                                          9,
+                                          50,
+                                          51
+                                      ]
+            },
+    "N24":  {
+                "nodeId":  24,
+                "connectedNodeCodes":  [
+                                           "N08",
+                                           "N23",
+                                           "N25"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_07"
+                                          ],
+                "connectedReachIds":  [
+                                          7,
+                                          51,
+                                          52
+                                      ]
+            },
+    "N25":  {
+                "nodeId":  25,
+                "connectedNodeCodes":  [
+                                           "N07",
+                                           "N11",
+                                           "N24"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_08"
+                                          ],
+                "connectedReachIds":  [
+                                          8,
+                                          52,
+                                          53
+                                      ]
+            },
+    "N26":  {
+                "nodeId":  26,
+                "connectedNodeCodes":  [
+                                           "N12",
+                                           "N23",
+                                           "N27"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_09",
+                                              "REAL_RIVER_10"
+                                          ],
+                "connectedReachIds":  [
+                                          9,
+                                          10,
+                                          54
+                                      ]
+            },
+    "N27":  {
+                "nodeId":  27,
+                "connectedNodeCodes":  [
+                                           "N26",
+                                           "N28",
+                                           "N30"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_11"
+                                          ],
+                "connectedReachIds":  [
+                                          11,
+                                          54,
+                                          55
+                                      ]
+            },
+    "N28":  {
+                "nodeId":  28,
+                "connectedNodeCodes":  [
+                                           "N05",
+                                           "N27",
+                                           "N31"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          48,
+                                          49,
+                                          55
+                                      ]
+            },
+    "N29":  {
+                "nodeId":  29,
+                "connectedNodeCodes":  [
+                                           "N21",
+                                           "N30",
+                                           "N32"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_12"
+                                          ],
+                "connectedReachIds":  [
+                                          12,
+                                          33,
+                                          34
+                                      ]
+            },
+    "N30":  {
+                "nodeId":  30,
+                "connectedNodeCodes":  [
+                                           "N27",
+                                           "N29",
+                                           "N31"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_11",
+                                              "REAL_RIVER_12"
+                                          ],
+                "connectedReachIds":  [
+                                          11,
+                                          12,
+                                          56
+                                      ]
+            },
+    "N31":  {
+                "nodeId":  31,
+                "connectedNodeCodes":  [
+                                           "N28",
+                                           "N30",
+                                           "N39"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          47,
+                                          48,
+                                          56
+                                      ]
+            },
+    "N32":  {
+                "nodeId":  32,
+                "connectedNodeCodes":  [
+                                           "N29",
+                                           "N33",
+                                           "N34"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_13"
+                                          ],
+                "connectedReachIds":  [
+                                          13,
+                                          34,
+                                          35
+                                      ]
+            },
+    "N33":  {
+                "nodeId":  33,
+                "connectedNodeCodes":  [
+                                           "N13",
+                                           "N32",
+                                           "N35"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_13",
+                                              "REAL_RIVER_14"
+                                          ],
+                "connectedReachIds":  [
+                                          13,
+                                          14,
+                                          57
+                                      ]
+            },
+    "N34":  {
+                "nodeId":  34,
+                "connectedNodeCodes":  [
+                                           "N32",
+                                           "N35",
+                                           "N40"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_15"
+                                          ],
+                "connectedReachIds":  [
+                                          15,
+                                          35,
+                                          36
+                                      ]
+            },
+    "N35":  {
+                "nodeId":  35,
+                "connectedNodeCodes":  [
+                                           "N33",
+                                           "N34",
+                                           "N36",
+                                           "N41"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_14",
+                                              "REAL_RIVER_15",
+                                              "REAL_RIVER_17"
+                                          ],
+                "connectedReachIds":  [
+                                          14,
+                                          15,
+                                          17,
+                                          58
+                                      ]
+            },
+    "N36":  {
+                "nodeId":  36,
+                "connectedNodeCodes":  [
+                                           "N35",
+                                           "N37",
+                                           "N42"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_18"
+                                          ],
+                "connectedReachIds":  [
+                                          18,
+                                          58,
+                                          59
+                                      ]
+            },
+    "N37":  {
+                "nodeId":  37,
+                "connectedNodeCodes":  [
+                                           "N14",
+                                           "N36",
+                                           "N38"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_16"
+                                          ],
+                "connectedReachIds":  [
+                                          16,
+                                          59,
+                                          60
+                                      ]
+            },
+    "N38":  {
+                "nodeId":  38,
+                "connectedNodeCodes":  [
+                                           "N37",
+                                           "N39",
+                                           "N44"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_19"
+                                          ],
+                "connectedReachIds":  [
+                                          19,
+                                          60,
+                                          61
+                                      ]
+            },
+    "N39":  {
+                "nodeId":  39,
+                "connectedNodeCodes":  [
+                                           "N31",
+                                           "N38",
+                                           "N45"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          46,
+                                          47,
+                                          61
+                                      ]
+            },
+    "N40":  {
+                "nodeId":  40,
+                "connectedNodeCodes":  [
+                                           "N34",
+                                           "N41",
+                                           "N54"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_20"
+                                          ],
+                "connectedReachIds":  [
+                                          20,
+                                          36,
+                                          37
+                                      ]
+            },
+    "N41":  {
+                "nodeId":  41,
+                "connectedNodeCodes":  [
+                                           "N35",
+                                           "N40",
+                                           "N42",
+                                           "N46"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_17",
+                                              "REAL_RIVER_20",
+                                              "REAL_RIVER_22"
+                                          ],
+                "connectedReachIds":  [
+                                          17,
+                                          20,
+                                          22,
+                                          62
+                                      ]
+            },
+    "N42":  {
+                "nodeId":  42,
+                "connectedNodeCodes":  [
+                                           "N16",
+                                           "N36",
+                                           "N41",
+                                           "N43"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_18",
+                                              "REAL_RIVER_23"
+                                          ],
+                "connectedReachIds":  [
+                                          18,
+                                          23,
+                                          62,
+                                          63
+                                      ]
+            },
+    "N43":  {
+                "nodeId":  43,
+                "connectedNodeCodes":  [
+                                           "N42",
+                                           "N44",
+                                           "N49"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_25"
+                                          ],
+                "connectedReachIds":  [
+                                          25,
+                                          63,
+                                          64
+                                      ]
+            },
+    "N44":  {
+                "nodeId":  44,
+                "connectedNodeCodes":  [
+                                           "N38",
+                                           "N43",
+                                           "N45"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_19"
+                                          ],
+                "connectedReachIds":  [
+                                          19,
+                                          64,
+                                          65
+                                      ]
+            },
+    "N45":  {
+                "nodeId":  45,
+                "connectedNodeCodes":  [
+                                           "N39",
+                                           "N44",
+                                           "N50"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          45,
+                                          46,
+                                          65
+                                      ]
+            },
+    "N46":  {
+                "nodeId":  46,
+                "connectedNodeCodes":  [
+                                           "N04",
+                                           "N41",
+                                           "N47",
+                                           "N51"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_22",
+                                              "REAL_RIVER_28"
+                                          ],
+                "connectedReachIds":  [
+                                          22,
+                                          28,
+                                          39,
+                                          40
+                                      ]
+            },
+    "N47":  {
+                "nodeId":  47,
+                "connectedNodeCodes":  [
+                                           "N19",
+                                           "N46",
+                                           "N48",
+                                           "N51"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_28"
+                                          ],
+                "connectedReachIds":  [
+                                          28,
+                                          29,
+                                          30,
+                                          67
+                                      ]
+            },
+    "N48":  {
+                "nodeId":  48,
+                "connectedNodeCodes":  [
+                                           "N47",
+                                           "N49",
+                                           "N52"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          31,
+                                          66,
+                                          67
+                                      ]
+            },
+    "N49":  {
+                "nodeId":  49,
+                "connectedNodeCodes":  [
+                                           "N17",
+                                           "N43",
+                                           "N48"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_24",
+                                              "REAL_RIVER_25"
+                                          ],
+                "connectedReachIds":  [
+                                          24,
+                                          25,
+                                          66
+                                      ]
+            },
+    "N50":  {
+                "nodeId":  50,
+                "connectedNodeCodes":  [
+                                           "N02",
+                                           "N18",
+                                           "N45"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_26"
+                                          ],
+                "connectedReachIds":  [
+                                          26,
+                                          44,
+                                          45
+                                      ]
+            },
+    "N51":  {
+                "nodeId":  51,
+                "connectedNodeCodes":  [
+                                           "N46",
+                                           "N47",
+                                           "N52"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          30,
+                                          40,
+                                          41
+                                      ]
+            },
+    "N52":  {
+                "nodeId":  52,
+                "connectedNodeCodes":  [
+                                           "N48",
+                                           "N51",
+                                           "N53"
+                                       ],
+                "connectedSegmentCodes":  [
+
+                                          ],
+                "connectedReachIds":  [
+                                          31,
+                                          41,
+                                          42
+                                      ]
+            },
+    "N53":  {
+                "nodeId":  53,
+                "connectedNodeCodes":  [
+                                           "N02",
+                                           "N20",
+                                           "N52"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_27"
+                                          ],
+                "connectedReachIds":  [
+                                          27,
+                                          42,
+                                          43
+                                      ]
+            },
+    "N54":  {
+                "nodeId":  54,
+                "connectedNodeCodes":  [
+                                           "N04",
+                                           "N15",
+                                           "N40"
+                                       ],
+                "connectedSegmentCodes":  [
+                                              "REAL_RIVER_21"
+                                          ],
+                "connectedReachIds":  [
+                                          21,
+                                          37,
+                                          38
+                                      ]
+            }
+}

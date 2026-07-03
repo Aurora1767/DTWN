@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 
 import MainMapStage from '@/components/MainMapStage.vue'
+import EnvMetricsPanel from '@/components/EnvMetricsPanel.vue'
+import HydrologicalStationsPanel from '@/components/HydrologicalStationsPanel.vue'
 import MiniLineChart from '@/components/MiniLineChart.vue'
 import PanelShell from '@/components/PanelShell.vue'
 import { usePlatformStore } from '@/stores/platform'
@@ -12,6 +14,14 @@ const rightCollapsed = ref(false)
 
 onMounted(() => {
   void store.loadDashboard()
+  store.startEnvironmentPolling(60_000)
+  store.startWaterQuantityPolling(300_000)
+  void notifyLayoutChanged()
+})
+
+onUnmounted(() => {
+  store.stopEnvironmentPolling()
+  store.stopWaterQuantityPolling()
 })
 
 async function toggleLeftPanel() {
@@ -32,6 +42,10 @@ async function notifyLayoutChanged() {
 
 <template>
   <div class="cockpit-grid" :class="{ 'left-collapsed': leftCollapsed, 'right-collapsed': rightCollapsed }">
+    <main class="center-stage">
+      <MainMapStage />
+    </main>
+
     <aside class="side-stack side-panel" :class="{ collapsed: leftCollapsed }">
       <button
         class="side-collapse-button side-collapse-button-left"
@@ -54,34 +68,45 @@ async function notifyLayoutChanged() {
               <strong>{{ store.totalFlow }} m3/s</strong>
             </div>
           </div>
-          <div class="station-list">
-            <div v-for="station in store.stations" :key="station.stationCode" class="station-item">
+        </PanelShell>
+
+        <EnvMetricsPanel
+          :snapshot="store.environment"
+          :rainfall-points="store.rainfallHistory.points"
+          :live="store.environmentLive"
+          :rainfall-live="store.rainfallLive"
+        />
+
+        <HydrologicalStationsPanel
+          :stations="store.waterQuantity.stations"
+          :live="store.waterQuantityLive"
+          :updated-at="store.waterQuantity.timestamp"
+        />
+
+        <PanelShell title="流速监测" eyebrow="VELOCITY">
+          <div class="compact-table">
+            <div v-for="station in store.stations" :key="`${station.stationCode}-velocity`">
               <span>{{ station.stationName }}</span>
-              <strong>{{ station.waterLevel.toFixed(2) }} m</strong>
-              <em :class="station.status.toLowerCase()">{{ station.status }}</em>
+              <b>{{ station.velocity.toFixed(2) }} m/s</b>
             </div>
           </div>
         </PanelShell>
 
-        <PanelShell title="降雨与流量" eyebrow="TREND">
-          <MiniLineChart :values="store.stations.map((station) => station.flow)" />
+        <PanelShell title="降雨统计" eyebrow="RAIN">
           <div class="compact-table">
-            <div v-for="station in store.stations" :key="station.stationCode">
+            <div v-for="station in store.stations" :key="`${station.stationCode}-rain`">
               <span>{{ station.stationName }}</span>
               <b>{{ station.rainfall.toFixed(1) }} mm</b>
             </div>
           </div>
         </PanelShell>
+
+        <PanelShell title="流量趋势" eyebrow="FLOW">
+          <MiniLineChart :values="store.stations.map((station) => station.flow)" />
+        </PanelShell>
       </template>
 
-      <div v-else class="side-rail">
-        <span>实时水情</span>
-      </div>
     </aside>
-
-    <main class="center-stage">
-      <MainMapStage />
-    </main>
 
     <aside class="side-stack side-panel" :class="{ collapsed: rightCollapsed }">
       <button
@@ -100,10 +125,16 @@ async function notifyLayoutChanged() {
             <strong>{{ store.latestSimulation.status }}</strong>
             <small>{{ store.latestSimulation.runnerType }} RUNNER</small>
           </div>
+        </PanelShell>
+
+        <PanelShell title="预演曲线" eyebrow="CURVE">
           <MiniLineChart
             :values="store.latestSimulation.results[0]?.series.map((point) => point.waterLevel) ?? []"
-            color="#2fffa8"
+            color="#00f2ff"
           />
+        </PanelShell>
+
+        <PanelShell title="模拟指标" eyebrow="METRIC">
           <div class="metric-row">
             <div>
               <span>最高水位</span>
@@ -112,6 +143,16 @@ async function notifyLayoutChanged() {
             <div>
               <span>平均流速</span>
               <strong>{{ store.latestSimulation.results[0]?.averageVelocity ?? '-' }} m/s</strong>
+            </div>
+          </div>
+          <div class="metric-row">
+            <div>
+              <span>最大流量</span>
+              <strong>{{ store.latestSimulation.results[0]?.maxFlow ?? '-' }} m3/s</strong>
+            </div>
+            <div>
+              <span>河段</span>
+              <strong>{{ store.latestSimulation.results[0]?.segmentName ?? '-' }}</strong>
             </div>
           </div>
         </PanelShell>
@@ -127,11 +168,38 @@ async function notifyLayoutChanged() {
             </div>
           </div>
         </PanelShell>
+
+        <PanelShell title="预警统计" eyebrow="ALERT">
+          <div class="metric-row">
+            <div>
+              <span>高风险事件</span>
+              <strong>{{ store.highRiskCount }}</strong>
+            </div>
+            <div>
+              <span>告警总数</span>
+              <strong>{{ store.warnings.length }}</strong>
+            </div>
+          </div>
+        </PanelShell>
+
+        <PanelShell title="水网概览" eyebrow="NETWORK">
+          <div class="compact-table">
+            <div>
+              <span>河段数量</span>
+              <b>{{ store.network.segments.length }}</b>
+            </div>
+            <div>
+              <span>节点数量</span>
+              <b>{{ store.network.nodes.length }}</b>
+            </div>
+            <div v-for="segment in store.network.segments" :key="segment.code">
+              <span>{{ segment.name }}</span>
+              <b>{{ (segment.lengthMeters / 1000).toFixed(1) }} km</b>
+            </div>
+          </div>
+        </PanelShell>
       </template>
 
-      <div v-else class="side-rail">
-        <span>模型预警</span>
-      </div>
     </aside>
   </div>
 </template>

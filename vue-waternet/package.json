@@ -12,6 +12,7 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "cesium": "^1.140.0",
     "pinia": "^3.0.4",
     "vue": "beta",
     "vue-router": "^5.1.0"

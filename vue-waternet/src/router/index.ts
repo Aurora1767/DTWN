@@ -11,13 +11,17 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('@/views/DashboardView.vue'),
-      meta: { title: '综合态势' },
+      meta: { title: '数据大屏' },
     },
     {
       path: '/map',
       name: 'map',
       component: () => import('@/views/MapWorkspaceView.vue'),
       meta: { title: '数据底板' },
+    },
+    {
+      path: '/cesium',
+      redirect: '/dashboard',
     },
     {
       path: '/simulation',
@@ -35,7 +39,7 @@ const router = createRouter({
       path: '/scenario',
       name: 'scenario',
       component: () => import('@/views/ScenarioView.vue'),
-      meta: { title: '预案管理' },
+      meta: { title: '防洪四预业务' },
     },
     {
       path: '/history',

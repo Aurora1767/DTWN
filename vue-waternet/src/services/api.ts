@@ -1,18 +1,35 @@
-import { mockDispatchPlans, mockHistoryRecords, mockNetwork, mockSimulation, mockStations, mockWarnings } from '@/data/mock'
+import {
+  mockHistoryRecords,
+  mockNetwork,
+  mockRainfallOverview,
+  mockSimulation,
+  mockStations,
+  mockWarnings,
+  mockWaterQuantityOverview,
+} from '@/data/mock'
 import type {
   ApiResponse,
-  DispatchPlan,
+  EnvironmentSnapshot,
   HistoricalSensorRecord,
+  HydroScenarioSnapshot,
   NetworkOverview,
+  RainfallOverview,
   RiverSegment,
   SensorSnapshot,
   SimulationRequest,
   SimulationResult,
+  WaterNode,
   WarningEvent,
+  WaterHistoryPoint,
+  WaterQuantityOverview,
+  WaterStationSnapshot,
 } from '@/types/platform'
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:8080/api'
-const RIVER_NETWORK_URL = `${import.meta.env.BASE_URL}data/river-network.geojson`
+const API_BASE = import.meta.env.VITE_API_BASE ?? '/api'
+const RIVER_NETWORK_URL = `${import.meta.env.BASE_URL}data/river-segments-67.geojson`
+const WATER_NODES_URL = `${import.meta.env.BASE_URL}data/water-nodes.geojson`
+const NODE_TOPOLOGY_URL = `${import.meta.env.BASE_URL}data/node-topology.json`
+const HYDRO_SCENARIO_DIRECT_URL = 'https://waterlevel.gd.hydrosim.cn/api/scenario/latest'
 
 export { API_BASE }
 
@@ -57,9 +74,26 @@ export async function fetchRiverNetworkSegments() {
       throw new Error(`${response.status} ${response.statusText}`)
     }
     const geojson = (await response.json()) as RiverGeoJson
+    const sourceIsWebMercator = isWebMercatorGeoJson(geojson)
     return geojson.features
-      .map((feature, index) => toRiverSegment(feature, index))
+      .map((feature, index) => toRiverSegment(feature, index, sourceIsWebMercator))
       .filter((segment): segment is RiverSegment => Boolean(segment))
+  } catch {
+    return []
+  }
+}
+
+export async function fetchWaterNodes() {
+  try {
+    const [response, topologyMap] = await Promise.all([fetch(WATER_NODES_URL), fetchNodeTopologyMap()])
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const geojson = (await response.json()) as NodeGeoJson
+    return geojson.features
+      .map((feature) => toWaterNode(feature, topologyMap))
+      .filter((node): node is WaterNode => Boolean(node))
+      .sort((left, right) => Number(left.code.replace('N', '')) - Number(right.code.replace('N', '')))
   } catch {
     return []
   }
@@ -69,12 +103,34 @@ export function fetchStations() {
   return getData<SensorSnapshot[]>('/realtime/stations', mockStations)
 }
 
-export function fetchWarnings() {
-  return getData<WarningEvent[]>('/warnings', mockWarnings)
+const mockEnvironment: EnvironmentSnapshot = {
+  weatherText: '晴',
+  temperature: '25.6',
+  windSpeed: '3.2',
+  windScale: '2',
+  observedAt: new Date().toISOString(),
 }
 
-export function fetchDispatchPlans() {
-  return getData<DispatchPlan[]>('/scenarios/plans', mockDispatchPlans)
+export function fetchEnvironmentSnapshot() {
+  return getData<EnvironmentSnapshot>('/weather/environment', mockEnvironment)
+}
+
+export async function fetchEnvironmentSnapshotLive(): Promise<EnvironmentSnapshot | null> {
+  try {
+    const response = await fetch(`${API_BASE}/weather/environment`)
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const body = (await response.json()) as ApiResponse<EnvironmentSnapshot>
+    return body.data
+  } catch (error) {
+    console.warn('[waternet] environment snapshot request failed; keeping last value', error)
+    return null
+  }
+}
+
+export function fetchWarnings() {
+  return getData<WarningEvent[]>('/warnings', mockWarnings)
 }
 
 export function runSimulation(request: SimulationRequest) {
@@ -99,14 +155,100 @@ export function historyExportUrl(params: { nodeCode?: string; start?: string; en
   return `${API_BASE}/history/sensor-records/export${suffix}`
 }
 
+export function fetchWaterQuantityOverview() {
+  return getData<WaterQuantityOverview>('/water-quantity/overview', mockWaterQuantityOverview)
+}
+
+export function fetchWaterStations() {
+  return getData<WaterStationSnapshot[]>('/water-quantity/stations', mockWaterQuantityOverview.stations)
+}
+
+export function fetchWaterStationHistory(stationCode: string) {
+  return getData<WaterHistoryPoint[]>(
+    `/water-quantity/stations/${stationCode}/history`,
+    mockWaterQuantityOverview.historyByCode[stationCode] ?? [],
+  )
+}
+
+export function fetchRainfallOverview() {
+  return getData<RainfallOverview>('/rainfall/history-24h', mockRainfallOverview)
+}
+
+export async function fetchRainfallOverviewLive(): Promise<RainfallOverview | null> {
+  try {
+    const response = await fetch(`${API_BASE}/rainfall/history-24h`)
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const body = (await response.json()) as ApiResponse<RainfallOverview>
+    return body.data
+  } catch (error) {
+    console.warn('[waternet] rainfall history request failed; keeping last value', error)
+    return null
+  }
+}
+
+export async function fetchHydroScenarioLatest() {
+  try {
+    const response = await fetch(`${API_BASE}/hydro-scenario/latest`)
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const body = (await response.json()) as ApiResponse<HydroScenarioSnapshot>
+    return body.data
+  } catch {
+    try {
+      const response = await fetch(HYDRO_SCENARIO_DIRECT_URL)
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`)
+      }
+      return (await response.json()) as HydroScenarioSnapshot
+    } catch {
+      return fallbackHydroScenarioSnapshot()
+    }
+  }
+}
+
+export async function fetchWaterQuantityOverviewLive(): Promise<WaterQuantityOverview | null> {
+  try {
+    const response = await fetch(`${API_BASE}/water-quantity/overview`)
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const body = (await response.json()) as ApiResponse<WaterQuantityOverview>
+    return body.data
+  } catch (error) {
+    console.warn('[waternet] water quantity request failed; keeping last value', error)
+    return null
+  }
+}
+
 interface RiverGeoJson {
+  crs?: {
+    properties?: {
+      name?: string
+    }
+  }
   features: RiverFeature[]
+}
+
+interface NodeGeoJson {
+  features: NodeFeature[]
 }
 
 interface RiverFeature {
   properties?: {
+    fid?: number | string
     code?: string
     name?: string
+    reachId?: number
+    startNodeCode?: string
+    endNodeCode?: string
+    width?: number
+    length?: number
+    chezy?: number
+    dx?: number
+    bed?: number
   }
   geometry?: {
     type: 'LineString' | 'MultiLineString'
@@ -114,31 +256,127 @@ interface RiverFeature {
   }
 }
 
+interface NodeFeature {
+  properties?: {
+    name?: string | number
+  }
+  geometry?: {
+    type: 'Point'
+    coordinates: LngLatPair
+  }
+}
+
 type LngLatPair = [number, number]
 
-function toRiverSegment(feature: RiverFeature, index: number): RiverSegment | null {
-  const line = normalizeLineCoordinates(feature.geometry)
+interface NodeTopologyRecord {
+  connectedNodeCodes?: string[]
+  connectedSegmentCodes?: string[]
+  connectedReachIds?: number[]
+}
+
+function toRiverSegment(feature: RiverFeature, index: number, sourceIsWebMercator = false): RiverSegment | null {
+  const line = normalizeLineCoordinates(feature.geometry, sourceIsWebMercator)
   if (line.length < 2) return null
 
-  const code = feature.properties?.code ?? `REAL_RIVER_${String(index + 1).padStart(2, '0')}`
+  const fid = toFiniteNumber(feature.properties?.fid)
+  const reachId = feature.properties?.reachId ?? fid
+  const segmentNo = reachId ?? index + 1
+  const code = feature.properties?.code ?? `RIVER_${String(segmentNo).padStart(2, '0')}`
   return {
     code,
-    name: feature.properties?.name ?? `河段 ${index + 1}`,
-    lengthMeters: Math.round(calculateLengthMeters(line)),
-    widthMeters: 24,
+    name: feature.properties?.name ?? `河段 ${segmentNo}`,
+    reachId,
+    lengthMeters: Math.round(feature.properties?.length ?? calculateLengthMeters(line)),
+    widthMeters: Number(feature.properties?.width ?? 24),
     manningN: 0.03,
-    startNodeCode: `${code}_START`,
-    endNodeCode: `${code}_END`,
+    chezy: feature.properties?.chezy,
+    dx: feature.properties?.dx,
+    bedElevation: feature.properties?.bed,
+    startNodeCode: feature.properties?.startNodeCode ?? `${code}_START`,
+    endNodeCode: feature.properties?.endNodeCode ?? `${code}_END`,
     coordinates: line.map(([lng, lat]) => ({ lng, lat })),
   }
 }
 
-function normalizeLineCoordinates(geometry: RiverFeature['geometry']) {
+function toWaterNode(feature: NodeFeature, topologyMap: Record<string, NodeTopologyRecord>): WaterNode | null {
+  if (feature.geometry?.type !== 'Point') return null
+  const nodeNo = Number(feature.properties?.name)
+  const [lng, lat] = feature.geometry.coordinates
+  if (!Number.isFinite(nodeNo) || !Number.isFinite(lng) || !Number.isFinite(lat)) return null
+
+  const category = classifyNode(nodeNo)
+  const code = `N${String(nodeNo).padStart(2, '0')}`
+  const topology = topologyMap[code]
+  return {
+    code,
+    name: `${category.label} ${nodeNo}`,
+    type: category.type,
+    lng,
+    lat,
+    initialWaterLevel: 2.44,
+    boundaryType: category.boundaryType,
+    connectedNodeCodes: topology?.connectedNodeCodes ?? [],
+    connectedSegmentCodes: topology?.connectedSegmentCodes ?? [],
+    connectedReachIds: topology?.connectedReachIds ?? [],
+  }
+}
+
+async function fetchNodeTopologyMap(): Promise<Record<string, NodeTopologyRecord>> {
+  try {
+    const response = await fetch(NODE_TOPOLOGY_URL)
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    return (await response.json()) as Record<string, NodeTopologyRecord>
+  } catch {
+    return {}
+  }
+}
+
+function classifyNode(nodeNo: number) {
+  if ([1, 3, 6].includes(nodeNo)) {
+    return { label: '边界节点', type: 'BOUNDARY', boundaryType: 'BOUNDARY' }
+  }
+  if (nodeNo >= 7 && nodeNo <= 20) {
+    return { label: '断头河节点', type: 'DEAD_END', boundaryType: 'DEAD_END' }
+  }
+  return { label: '节点', type: 'JUNCTION', boundaryType: 'NONE' }
+}
+
+function normalizeLineCoordinates(geometry: RiverFeature['geometry'], sourceIsWebMercator = false) {
   if (!geometry) return []
   if (geometry.type === 'LineString') {
-    return geometry.coordinates as LngLatPair[]
+    return normalizeCoordinatePairs(geometry.coordinates as LngLatPair[], sourceIsWebMercator)
   }
-  return (geometry.coordinates as LngLatPair[][]).flat()
+  return normalizeCoordinatePairs((geometry.coordinates as LngLatPair[][]).flat(), sourceIsWebMercator)
+}
+
+function normalizeCoordinatePairs(coordinates: LngLatPair[], sourceIsWebMercator: boolean) {
+  if (!sourceIsWebMercator) return coordinates
+  return coordinates.map(([x, y]) => webMercatorToLngLat(x, y))
+}
+
+function webMercatorToLngLat(x: number, y: number): LngLatPair {
+  const radius = 6378137
+  const lng = (x / radius) * (180 / Math.PI)
+  const lat = (2 * Math.atan(Math.exp(y / radius)) - Math.PI / 2) * (180 / Math.PI)
+  return [lng, lat]
+}
+
+function isWebMercatorGeoJson(geojson: RiverGeoJson) {
+  const crsName = geojson.crs?.properties?.name?.toLowerCase() ?? ''
+  if (crsName.includes('3857') || crsName.includes('webmercator')) {
+    return true
+  }
+  const firstCoordinate = geojson.features
+    .flatMap((feature) => normalizeLineCoordinates(feature.geometry, false))
+    .find(Boolean)
+  return Boolean(firstCoordinate && (Math.abs(firstCoordinate[0]) > 180 || Math.abs(firstCoordinate[1]) > 90))
+}
+
+function toFiniteNumber(value: unknown) {
+  const numberValue = Number(value)
+  return Number.isFinite(numberValue) ? numberValue : undefined
 }
 
 function calculateLengthMeters(line: LngLatPair[]) {
@@ -167,4 +405,15 @@ function distanceMeters(from: LngLatPair, to: LngLatPair) {
 
 function toRadians(value: number) {
   return (value * Math.PI) / 180
+}
+
+function fallbackHydroScenarioSnapshot(): HydroScenarioSnapshot {
+  const timestamp = new Date().toISOString()
+  return {
+    channels: {
+      taihu: { value: 14.02, timestamp },
+      'canal-north': { value: 132.04, timestamp },
+      'canal-south': { value: 14.03, timestamp },
+    },
+  }
 }

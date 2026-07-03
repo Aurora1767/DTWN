@@ -35,21 +35,34 @@
 
  :: Spring Boot ::                (v4.1.0)
 
-2026-07-01T20:36:42.741+08:00  INFO 33480 --- [waternet] [           main] c.project.waternet.WaternetApplication   : Starting WaternetApplication using Java 21.0.9 with PID 33480 (D:\数字孪生水网课设\数字孪生水网项目\waternet\target\classes started by 17671 in D:\数字孪生水网课设\数字孪生水网项目\waternet)
-2026-07-01T20:36:42.744+08:00  INFO 33480 --- [waternet] [           main] c.project.waternet.WaternetApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-07-01T20:36:43.502+08:00  INFO 33480 --- [waternet] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-07-01T20:36:43.525+08:00  INFO 33480 --- [waternet] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-07-01T20:36:43.526+08:00  INFO 33480 --- [waternet] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
-2026-07-01T20:36:43.576+08:00  INFO 33480 --- [waternet] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 782 ms
-2026-07-01T20:36:43.747+08:00  WARN 33480 --- [waternet] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+2026-07-03T14:06:17.152+08:00  INFO 43004 --- [waternet] [           main] c.project.waternet.WaternetApplication   : Starting WaternetApplication using Java 21.0.9 with PID 43004 (D:\数字孪生水网课设\数字孪生水网项目\waternet\target\classes started by 17671 in D:\数字孪生水网课设\数字孪生水网项目\waternet)
+2026-07-03T14:06:17.157+08:00  INFO 43004 --- [waternet] [           main] c.project.waternet.WaternetApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-07-03T14:06:18.066+08:00  INFO 43004 --- [waternet] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-07-03T14:06:18.091+08:00  INFO 43004 --- [waternet] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-07-03T14:06:18.092+08:00  INFO 43004 --- [waternet] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-07-03T14:06:18.148+08:00  INFO 43004 --- [waternet] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 945 ms
+2026-07-03T14:06:18.585+08:00  WARN 43004 --- [waternet] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: f286f509-1a7c-420b-a17f-3e28908b6fb9
+Using generated security password: 3eee2ac4-87aa-4662-b08c-555badef694b
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2026-07-01T20:36:43.913+08:00  INFO 33480 --- [waternet] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-07-01T20:36:44.207+08:00  INFO 33480 --- [waternet] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-07-01T20:36:44.250+08:00  INFO 33480 --- [waternet] [           main] c.project.waternet.WaternetApplication   : Started WaternetApplication in 2.123 seconds (process running for 2.423)
-2026-07-01T20:37:11.333+08:00  INFO 33480 --- [waternet] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-07-01T20:37:11.338+08:00  INFO 33480 --- [waternet] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-07-01T20:37:11.339+08:00  INFO 33480 --- [waternet] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-03T14:06:18.818+08:00  INFO 43004 --- [waternet] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-07-03T14:06:19.179+08:00  INFO 43004 --- [waternet] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-07-03T14:06:19.187+08:00  INFO 43004 --- [waternet] [           main] c.project.waternet.WaternetApplication   : Started WaternetApplication in 2.822 seconds (process running for 3.201)
+2026-07-03T14:06:19.296+08:00  INFO 43004 --- [waternet] [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-03T14:06:19.522+08:00  INFO 43004 --- [waternet] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-03T14:06:19.525+08:00  INFO 43004 --- [waternet] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  46:16 min
+[INFO] Finished at: 2026-07-03T14:52:30+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:4.1.0:run (default-cli) on project waternet: Process terminated with exit code: -1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

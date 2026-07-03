@@ -2,9 +2,11 @@ import type {
   DispatchPlan,
   HistoricalSensorRecord,
   NetworkOverview,
+  RainfallOverview,
   SensorSnapshot,
   SimulationResult,
   WarningEvent,
+  WaterQuantityOverview,
 } from '@/types/platform'
 
 export const mockNetwork: NetworkOverview = {
@@ -241,4 +243,105 @@ export const mockSimulation: SimulationResult = {
       })),
     },
   ],
+}
+
+const mockWaterHistory = (
+  points: Array<[string, number, number, number]>,
+): WaterQuantityOverview['historyByCode'][string] =>
+  points.map(([date, waterLevel, flowRate, rainfall]) => ({
+    date,
+    waterLevel,
+    flowRate,
+    rainfall,
+  }))
+
+export const mockWaterQuantityOverview: WaterQuantityOverview = {
+  status: 'success',
+  timestamp: new Date().toISOString(),
+  live: false,
+  stations: [
+    { stationCode: '63202900', stationName: '望亭(大)', waterLevel: 3.58, flowRate: 59.4, observedAt: '2026-07-02' },
+    { stationCode: '63202800', stationName: '洛社', waterLevel: 3.57, flowRate: 61.7, observedAt: '2026-07-02' },
+    { stationCode: '63203000', stationName: '苏州(枫桥)', waterLevel: 3.47, flowRate: 33.7, observedAt: '2026-07-02' },
+    { stationCode: '63201015', stationName: '浒墅关', waterLevel: 3.5, flowRate: 19.9, observedAt: '2026-07-02' },
+    { stationCode: '63201200', stationName: '白屈港', waterLevel: 3.54, flowRate: 52.8, observedAt: '2026-07-02' },
+    { stationCode: '63102100', stationName: '黄埭桥', waterLevel: 3.54, flowRate: 30.0, observedAt: '2026-07-02' },
+    { stationCode: '63102150', stationName: '漕桥(三)', waterLevel: 3.55, flowRate: 31.5, observedAt: '2026-07-02' },
+    { stationCode: '63204260', stationName: '张桥', waterLevel: 3.51, flowRate: 33.9, observedAt: '2026-07-02' },
+  ],
+  historyByCode: {
+    '63202900': mockWaterHistory([
+      ['2026-06-26', 3.55, 68.0, 2.1],
+      ['2026-06-27', 3.55, 70.2, 5.4],
+      ['2026-06-30', 3.64, 70.7, 8.2],
+      ['2026-07-01', 3.72, 72.3, 12.6],
+      ['2026-07-02', 3.58, 59.4, 3.8],
+    ]),
+    '63202800': mockWaterHistory([
+      ['2026-06-26', 3.67, 90.5, 1.8],
+      ['2026-06-27', 3.62, 57.1, 4.2],
+      ['2026-06-30', 3.69, 42.0, 6.5],
+      ['2026-07-01', 3.68, 55.5, 9.1],
+      ['2026-07-02', 3.57, 61.7, 2.4],
+    ]),
+    '63203000': mockWaterHistory([
+      ['2026-06-26', 3.46, 60.7, 2.6],
+      ['2026-06-27', 3.42, 54.8, 3.9],
+      ['2026-06-30', 3.39, 82.2, 7.3],
+      ['2026-07-01', 3.63, 43.4, 11.2],
+      ['2026-07-02', 3.47, 33.7, 1.5],
+    ]),
+    '63201015': mockWaterHistory([
+      ['2026-06-26', 3.42, 49.7, 1.2],
+      ['2026-06-27', 3.43, 41.4, 2.8],
+      ['2026-06-30', 3.4, 41.1, 5.6],
+      ['2026-07-01', 3.48, 39.5, 8.4],
+      ['2026-07-02', 3.5, 19.9, 0.8],
+    ]),
+    '63201200': mockWaterHistory([
+      ['2026-06-26', 3.46, 107.0, 3.1],
+      ['2026-06-27', 3.48, 86.2, 6.8],
+      ['2026-06-30', 3.48, 92.9, 10.5],
+      ['2026-07-01', 3.57, 84.2, 14.2],
+      ['2026-07-02', 3.54, 52.8, 2.2],
+    ]),
+    '63102100': mockWaterHistory([
+      ['2026-06-26', 3.53, 62.1, 1.6],
+      ['2026-06-27', 3.5, 42.4, 3.4],
+      ['2026-06-30', 3.5, 55.1, 6.1],
+      ['2026-07-01', 3.57, 49.4, 9.8],
+      ['2026-07-02', 3.54, 30.0, 1.9],
+    ]),
+    '63102150': mockWaterHistory([
+      ['2026-06-26', 3.53, 46.9, 1.4],
+      ['2026-06-27', 3.52, 36.9, 2.5],
+      ['2026-06-30', 3.51, 42.3, 5.2],
+      ['2026-07-01', 3.56, 36.0, 8.7],
+      ['2026-07-02', 3.55, 31.5, 1.1],
+    ]),
+    '63204260': mockWaterHistory([
+      ['2026-06-26', 3.29, 236.0, 4.5],
+      ['2026-06-27', 3.31, 250.0, 8.9],
+      ['2026-06-30', 3.38, 140.0, 13.6],
+      ['2026-07-01', 3.51, 82.0, 16.4],
+      ['2026-07-02', 3.51, 33.9, 2.8],
+    ]),
+  },
+}
+
+export const mockRainfallOverview: RainfallOverview = {
+  status: 'mock',
+  timestamp: new Date().toISOString(),
+  live: true,
+  points: Array.from({ length: 24 }, (_, index) => {
+    const hour = (new Date().getHours() - 23 + index + 24) % 24
+    const upstream = Number((Math.max(0, Math.sin(index / 3) * 2.4 + 1.1)).toFixed(2))
+    const downstream = Number((Math.max(0, Math.cos(index / 4) * 2.1 + 1.4)).toFixed(2))
+    return {
+      time: `${String(hour).padStart(2, '0')}:00`,
+      upstream,
+      downstream,
+      rainfall: Number(((upstream + downstream) / 2).toFixed(2)),
+    }
+  }),
 }

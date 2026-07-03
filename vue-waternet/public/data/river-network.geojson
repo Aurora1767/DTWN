@@ -14,7 +14,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_01",
                                             "name":  "河段1",
-                                            "sourceFile":  "河段1.geojson"
+                                            "sourceFile":  "河段1.geojson",
+                                            "reachId":  1,
+                                            "startNodeId":  1,
+                                            "endNodeId":  2,
+                                            "startNodeCode":  "N01",
+                                            "endNodeCode":  "N02",
+                                            "width":  20,
+                                            "bed":  0,
+                                            "length":  1400,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -122,7 +132,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_02",
                                             "name":  "河段2",
-                                            "sourceFile":  "河段2.geojson"
+                                            "sourceFile":  "河段2.geojson",
+                                            "reachId":  2,
+                                            "startNodeId":  3,
+                                            "endNodeId":  4,
+                                            "startNodeCode":  "N03",
+                                            "endNodeCode":  "N04",
+                                            "width":  105,
+                                            "bed":  0,
+                                            "length":  1500,
+                                            "dx":  100,
+                                            "chezy":  66.43
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -166,7 +186,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_03",
                                             "name":  "河段3",
-                                            "sourceFile":  "河段3.geojson"
+                                            "sourceFile":  "河段3.geojson",
+                                            "reachId":  3,
+                                            "startNodeId":  5,
+                                            "endNodeId":  6,
+                                            "startNodeCode":  "N05",
+                                            "endNodeCode":  "N06",
+                                            "width":  105,
+                                            "bed":  0,
+                                            "length":  1500,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -206,7 +236,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_04",
                                             "name":  "河段4",
-                                            "sourceFile":  "河段4.geojson"
+                                            "sourceFile":  "河段4.geojson",
+                                            "reachId":  4,
+                                            "startNodeId":  22,
+                                            "endNodeId":  21,
+                                            "startNodeCode":  "N22",
+                                            "endNodeCode":  "N21",
+                                            "width":  29.1107121059203,
+                                            "bed":  0,
+                                            "length":  1144.11363250097,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -242,7 +282,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_05",
                                             "name":  "河段5",
-                                            "sourceFile":  "河段5.geojson"
+                                            "sourceFile":  "河段5.geojson",
+                                            "reachId":  5,
+                                            "startNodeId":  22,
+                                            "endNodeId":  10,
+                                            "startNodeCode":  "N22",
+                                            "endNodeCode":  "N10",
+                                            "width":  18.0440255328161,
+                                            "bed":  0,
+                                            "length":  237.726258181466,
+                                            "dx":  20,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -294,7 +344,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_06",
                                             "name":  "河段6",
-                                            "sourceFile":  "河段6.geojson"
+                                            "sourceFile":  "河段6.geojson",
+                                            "reachId":  6,
+                                            "startNodeId":  23,
+                                            "endNodeId":  9,
+                                            "startNodeCode":  "N23",
+                                            "endNodeCode":  "N09",
+                                            "width":  13.464362320509,
+                                            "bed":  0,
+                                            "length":  294.818684374548,
+                                            "dx":  20,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -370,7 +430,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_07",
                                             "name":  "河段7",
-                                            "sourceFile":  "河段7.geojson"
+                                            "sourceFile":  "河段7.geojson",
+                                            "reachId":  7,
+                                            "startNodeId":  24,
+                                            "endNodeId":  8,
+                                            "startNodeCode":  "N24",
+                                            "endNodeCode":  "N08",
+                                            "width":  12.4151326909002,
+                                            "bed":  0,
+                                            "length":  410.276483993012,
+                                            "dx":  20,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -406,7 +476,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_08",
                                             "name":  "河段8",
-                                            "sourceFile":  "河段8.geojson"
+                                            "sourceFile":  "河段8.geojson",
+                                            "reachId":  8,
+                                            "startNodeId":  11,
+                                            "endNodeId":  25,
+                                            "startNodeCode":  "N11",
+                                            "endNodeCode":  "N25",
+                                            "width":  11.7404853520851,
+                                            "bed":  0,
+                                            "length":  311.815136282707,
+                                            "dx":  20,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -486,7 +566,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_09",
                                             "name":  "河段9",
-                                            "sourceFile":  "河段9.geojson"
+                                            "sourceFile":  "河段9.geojson",
+                                            "reachId":  9,
+                                            "startNodeId":  26,
+                                            "endNodeId":  23,
+                                            "startNodeCode":  "N26",
+                                            "endNodeCode":  "N23",
+                                            "width":  20.1105542969971,
+                                            "bed":  0,
+                                            "length":  77.907974913593,
+                                            "dx":  20,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -562,7 +652,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_10",
                                             "name":  "河段10",
-                                            "sourceFile":  "河段10.geojson"
+                                            "sourceFile":  "河段10.geojson",
+                                            "reachId":  10,
+                                            "startNodeId":  12,
+                                            "endNodeId":  26,
+                                            "startNodeCode":  "N12",
+                                            "endNodeCode":  "N26",
+                                            "width":  11.6915036189646,
+                                            "bed":  0,
+                                            "length":  132.371749594407,
+                                            "dx":  20,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -678,7 +778,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_11",
                                             "name":  "河段11",
-                                            "sourceFile":  "河段11.geojson"
+                                            "sourceFile":  "河段11.geojson",
+                                            "reachId":  11,
+                                            "startNodeId":  30,
+                                            "endNodeId":  27,
+                                            "startNodeCode":  "N30",
+                                            "endNodeCode":  "N27",
+                                            "width":  14.4764000792892,
+                                            "bed":  0,
+                                            "length":  1589.42714541322,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -726,7 +836,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_12",
                                             "name":  "河段12",
-                                            "sourceFile":  "河段12.geojson"
+                                            "sourceFile":  "河段12.geojson",
+                                            "reachId":  12,
+                                            "startNodeId":  30,
+                                            "endNodeId":  29,
+                                            "startNodeCode":  "N30",
+                                            "endNodeCode":  "N29",
+                                            "width":  16.1296974382589,
+                                            "bed":  0,
+                                            "length":  2391.16981332401,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -842,7 +962,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_13",
                                             "name":  "河段13",
-                                            "sourceFile":  "河段13.geojson"
+                                            "sourceFile":  "河段13.geojson",
+                                            "reachId":  13,
+                                            "startNodeId":  33,
+                                            "endNodeId":  32,
+                                            "startNodeCode":  "N33",
+                                            "endNodeCode":  "N32",
+                                            "width":  35.357609775326,
+                                            "bed":  0,
+                                            "length":  612.22209944184,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -870,7 +1000,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_14",
                                             "name":  "河段14",
-                                            "sourceFile":  "河段14.geojson"
+                                            "sourceFile":  "河段14.geojson",
+                                            "reachId":  14,
+                                            "startNodeId":  35,
+                                            "endNodeId":  33,
+                                            "startNodeCode":  "N35",
+                                            "endNodeCode":  "N33",
+                                            "width":  36.2211387421186,
+                                            "bed":  0,
+                                            "length":  930.244792017617,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -910,7 +1050,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_15",
                                             "name":  "河段15",
-                                            "sourceFile":  "河段15.geojson"
+                                            "sourceFile":  "河段15.geojson",
+                                            "reachId":  15,
+                                            "startNodeId":  35,
+                                            "endNodeId":  34,
+                                            "startNodeCode":  "N35",
+                                            "endNodeCode":  "N34",
+                                            "width":  27.9352288918608,
+                                            "bed":  0,
+                                            "length":  770.73814697486,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -962,7 +1112,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_16",
                                             "name":  "河段16",
-                                            "sourceFile":  "河段16.geojson"
+                                            "sourceFile":  "河段16.geojson",
+                                            "reachId":  16,
+                                            "startNodeId":  37,
+                                            "endNodeId":  14,
+                                            "startNodeCode":  "N37",
+                                            "endNodeCode":  "N14",
+                                            "width":  22.0633858110953,
+                                            "bed":  0,
+                                            "length":  460.40964710483,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -998,7 +1158,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_17",
                                             "name":  "河段17",
-                                            "sourceFile":  "河段17.geojson"
+                                            "sourceFile":  "河段17.geojson",
+                                            "reachId":  17,
+                                            "startNodeId":  41,
+                                            "endNodeId":  35,
+                                            "startNodeCode":  "N41",
+                                            "endNodeCode":  "N35",
+                                            "width":  30.1427613198427,
+                                            "bed":  0,
+                                            "length":  836.546197697275,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1166,7 +1336,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_18",
                                             "name":  "河段18",
-                                            "sourceFile":  "河段18.geojson"
+                                            "sourceFile":  "河段18.geojson",
+                                            "reachId":  18,
+                                            "startNodeId":  42,
+                                            "endNodeId":  36,
+                                            "startNodeCode":  "N42",
+                                            "endNodeCode":  "N36",
+                                            "width":  22.3213267878274,
+                                            "bed":  0,
+                                            "length":  688.881551647117,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1190,7 +1370,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_19",
                                             "name":  "河段19",
-                                            "sourceFile":  "河段19.geojson"
+                                            "sourceFile":  "河段19.geojson",
+                                            "reachId":  19,
+                                            "startNodeId":  44,
+                                            "endNodeId":  38,
+                                            "startNodeCode":  "N44",
+                                            "endNodeCode":  "N38",
+                                            "width":  22.3046833138864,
+                                            "bed":  0,
+                                            "length":  577.612286469096,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1246,63 +1436,41 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_20",
                                             "name":  "河段20",
-                                            "sourceFile":  "河段20.geojson"
+                                            "sourceFile":  "河段20.geojson",
+                                            "reachId":  20,
+                                            "startNodeId":  41,
+                                            "endNodeId":  40,
+                                            "startNodeCode":  "N41",
+                                            "endNodeCode":  "N40",
+                                            "width":  17.589123664976,
+                                            "bed":  0,
+                                            "length":  823.068996229404,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
                                           "coordinates":  [
                                                               [
                                                                   [
-                                                                      120.356986313945356,
-                                                                      31.495593005243059
+                                                                      120.35698631394536,
+                                                                      31.495593005243045
                                                                   ],
                                                                   [
-                                                                      120.357762569310196,
+                                                                      120.3577625693102,
                                                                       31.494652363769514
                                                                   ],
                                                                   [
-                                                                      120.359028648385532,
+                                                                      120.35902864838553,
                                                                       31.493625880212964
                                                                   ],
                                                                   [
-                                                                      120.360009340784089,
+                                                                      120.36000934078409,
                                                                       31.492979897715887
                                                                   ],
                                                                   [
-                                                                      120.360798045781806,
-                                                                      31.492174625615529
-                                                                  ],
-                                                                  [
-                                                                      120.36100041087991,
-                                                                      31.491710042403707
-                                                                  ],
-                                                                  [
-                                                                      120.361787386261483,
-                                                                      31.490434270285927
-                                                                  ],
-                                                                  [
-                                                                      120.359851945707774,
-                                                                      31.489695346916179
-                                                                  ],
-                                                                  [
-                                                                      120.359525048241579,
-                                                                      31.489974103124592
-                                                                  ],
-                                                                  [
-                                                                      120.359141073440028,
-                                                                      31.490739572249435
-                                                                  ],
-                                                                  [
-                                                                      120.358917952947266,
-                                                                      31.491128941423632
-                                                                  ],
-                                                                  [
-                                                                      120.359582125576964,
-                                                                      31.491553705946803
-                                                                  ],
-                                                                  [
-                                                                      120.360785938468268,
-                                                                      31.492062535908985
+                                                                      120.36076818580558,
+                                                                      31.492187838821014
                                                                   ]
                                                               ]
                                                           ]
@@ -1314,7 +1482,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_21",
                                             "name":  "河段21",
-                                            "sourceFile":  "河段21.geojson"
+                                            "sourceFile":  "河段21.geojson",
+                                            "reachId":  21,
+                                            "startNodeId":  15,
+                                            "endNodeId":  54,
+                                            "startNodeCode":  "N15",
+                                            "endNodeCode":  "N54",
+                                            "width":  48.1672809633775,
+                                            "bed":  0,
+                                            "length":  674.46129686981,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1382,7 +1560,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_22",
                                             "name":  "河段22",
-                                            "sourceFile":  "河段22.geojson"
+                                            "sourceFile":  "河段22.geojson",
+                                            "reachId":  22,
+                                            "startNodeId":  46,
+                                            "endNodeId":  41,
+                                            "startNodeCode":  "N46",
+                                            "endNodeCode":  "N41",
+                                            "width":  25.2770700023956,
+                                            "bed":  0,
+                                            "length":  1735.61314013296,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1442,7 +1630,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_23",
                                             "name":  "河段23",
-                                            "sourceFile":  "河段23.geojson"
+                                            "sourceFile":  "河段23.geojson",
+                                            "reachId":  23,
+                                            "startNodeId":  16,
+                                            "endNodeId":  42,
+                                            "startNodeCode":  "N16",
+                                            "endNodeCode":  "N42",
+                                            "width":  20.8484496496051,
+                                            "bed":  0,
+                                            "length":  616.107676695486,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1506,7 +1704,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_24",
                                             "name":  "河段24",
-                                            "sourceFile":  "河段24.geojson"
+                                            "sourceFile":  "河段24.geojson",
+                                            "reachId":  24,
+                                            "startNodeId":  49,
+                                            "endNodeId":  17,
+                                            "startNodeCode":  "N49",
+                                            "endNodeCode":  "N17",
+                                            "width":  14.5339557611459,
+                                            "bed":  0,
+                                            "length":  666.108782752735,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1598,7 +1806,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_25",
                                             "name":  "河段25",
-                                            "sourceFile":  "河段25.geojson"
+                                            "sourceFile":  "河段25.geojson",
+                                            "reachId":  25,
+                                            "startNodeId":  49,
+                                            "endNodeId":  43,
+                                            "startNodeCode":  "N49",
+                                            "endNodeCode":  "N43",
+                                            "width":  22.831000249969,
+                                            "bed":  0,
+                                            "length":  758.159996512317,
+                                            "dx":  50,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1674,7 +1892,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_26",
                                             "name":  "河段26",
-                                            "sourceFile":  "河段26.geojson"
+                                            "sourceFile":  "河段26.geojson",
+                                            "reachId":  26,
+                                            "startNodeId":  50,
+                                            "endNodeId":  18,
+                                            "startNodeCode":  "N50",
+                                            "endNodeCode":  "N18",
+                                            "width":  19.2404428375213,
+                                            "bed":  0,
+                                            "length":  1195.09958776209,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1730,7 +1958,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_27",
                                             "name":  "河段27",
-                                            "sourceFile":  "河段27.geojson"
+                                            "sourceFile":  "河段27.geojson",
+                                            "reachId":  27,
+                                            "startNodeId":  53,
+                                            "endNodeId":  20,
+                                            "startNodeCode":  "N53",
+                                            "endNodeCode":  "N20",
+                                            "width":  16.2849610306767,
+                                            "bed":  0,
+                                            "length":  1555.08360647286,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",
@@ -1794,7 +2032,17 @@
                                             "fid":  1,
                                             "code":  "REAL_RIVER_28",
                                             "name":  "河段28",
-                                            "sourceFile":  "河段28.geojson"
+                                            "sourceFile":  "河段28.geojson",
+                                            "reachId":  28,
+                                            "startNodeId":  47,
+                                            "endNodeId":  46,
+                                            "startNodeCode":  "N47",
+                                            "endNodeCode":  "N46",
+                                            "width":  30.7165958487556,
+                                            "bed":  0,
+                                            "length":  1197.28553064556,
+                                            "dx":  100,
+                                            "chezy":  44.29
                                         },
                          "geometry":  {
                                           "type":  "MultiLineString",

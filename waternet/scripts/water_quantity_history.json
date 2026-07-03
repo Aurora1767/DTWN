@@ -1,0 +1,222 @@
+{
+  "status": "success",
+  "timestamp": "2026-07-03 14:43:55",
+  "history_data": {
+    "望亭（大）": [
+      {
+        "date": "2026-07-03",
+        "water_level_m": 3.53,
+        "flow_rate_m3_s": 69.2
+      },
+      {
+        "date": "2026-07-02",
+        "water_level_m": 3.58,
+        "flow_rate_m3_s": 59.4
+      },
+      {
+        "date": "2026-07-01",
+        "water_level_m": 3.72,
+        "flow_rate_m3_s": 72.3
+      },
+      {
+        "date": "2026-06-30",
+        "water_level_m": 3.64,
+        "flow_rate_m3_s": 70.7
+      },
+      {
+        "date": "2026-06-27",
+        "water_level_m": 3.55,
+        "flow_rate_m3_s": 70.2
+      }
+    ],
+    "洛社": [
+      {
+        "date": "2026-07-03",
+        "water_level_m": 3.67,
+        "flow_rate_m3_s": 69.2
+      },
+      {
+        "date": "2026-07-02",
+        "water_level_m": 3.57,
+        "flow_rate_m3_s": 61.7
+      },
+      {
+        "date": "2026-07-01",
+        "water_level_m": 3.68,
+        "flow_rate_m3_s": 55.5
+      },
+      {
+        "date": "2026-06-30",
+        "water_level_m": 3.69,
+        "flow_rate_m3_s": 42.0
+      },
+      {
+        "date": "2026-06-27",
+        "water_level_m": 3.62,
+        "flow_rate_m3_s": 57.1
+      }
+    ],
+    "苏州（枫桥）": [
+      {
+        "date": "2026-07-03",
+        "water_level_m": 3.51,
+        "flow_rate_m3_s": 36.5
+      },
+      {
+        "date": "2026-07-02",
+        "water_level_m": 3.47,
+        "flow_rate_m3_s": 33.7
+      },
+      {
+        "date": "2026-07-01",
+        "water_level_m": 3.63,
+        "flow_rate_m3_s": 43.4
+      },
+      {
+        "date": "2026-06-30",
+        "water_level_m": 3.39,
+        "flow_rate_m3_s": 82.2
+      },
+      {
+        "date": "2026-06-27",
+        "water_level_m": 3.42,
+        "flow_rate_m3_s": 54.8
+      }
+    ],
+    "浯溪桥": [
+      {
+        "date": "2026-07-03",
+        "water_level_m": 3.57,
+        "flow_rate_m3_s": -0.58
+      },
+      {
+        "date": "2026-07-02",
+        "water_level_m": 3.5,
+        "flow_rate_m3_s": 19.9
+      },
+      {
+        "date": "2026-07-01",
+        "water_level_m": 3.48,
+        "flow_rate_m3_s": 39.5
+      },
+      {
+        "date": "2026-06-30",
+        "water_level_m": 3.4,
+        "flow_rate_m3_s": 41.1
+      },
+      {
+        "date": "2026-06-27",
+        "water_level_m": 3.43,
+        "flow_rate_m3_s": 41.4
+      }
+    ],
+    "百渎口": [
+      {
+        "date": "2026-07-03",
+        "water_level_m": 3.6,
+        "flow_rate_m3_s": 35.2
+      },
+      {
+        "date": "2026-07-02",
+        "water_level_m": 3.54,
+        "flow_rate_m3_s": 52.8
+      },
+      {
+        "date": "2026-07-01",
+        "water_level_m": 3.57,
+        "flow_rate_m3_s": 84.2
+      },
+      {
+        "date": "2026-06-30",
+        "water_level_m": 3.48,
+        "flow_rate_m3_s": 92.9
+      },
+      {
+        "date": "2026-06-27",
+        "water_level_m": 3.48,
+        "flow_rate_m3_s": 86.2
+      }
+    ],
+    "黄埝桥": [
+      {
+        "date": "2026-07-03",
+        "water_level_m": 3.61,
+        "flow_rate_m3_s": 18.1
+      },
+      {
+        "date": "2026-07-02",
+        "water_level_m": 3.54,
+        "flow_rate_m3_s": 30.0
+      },
+      {
+        "date": "2026-07-01",
+        "water_level_m": 3.57,
+        "flow_rate_m3_s": 49.4
+      },
+      {
+        "date": "2026-06-30",
+        "water_level_m": 3.5,
+        "flow_rate_m3_s": 55.1
+      },
+      {
+        "date": "2026-06-27",
+        "water_level_m": 3.5,
+        "flow_rate_m3_s": 42.4
+      }
+    ],
+    "漕桥（三）": [
+      {
+        "date": "2026-07-03",
+        "water_level_m": 3.6,
+        "flow_rate_m3_s": 20.4
+      },
+      {
+        "date": "2026-07-02",
+        "water_level_m": 3.55,
+        "flow_rate_m3_s": 31.5
+      },
+      {
+        "date": "2026-07-01",
+        "water_level_m": 3.56,
+        "flow_rate_m3_s": 36.0
+      },
+      {
+        "date": "2026-06-30",
+        "water_level_m": 3.51,
+        "flow_rate_m3_s": 42.3
+      },
+      {
+        "date": "2026-06-27",
+        "water_level_m": 3.52,
+        "flow_rate_m3_s": 36.9
+      }
+    ],
+    "张桥": [
+      {
+        "date": "2026-07-03",
+        "water_level_m": 3.52,
+        "flow_rate_m3_s": 42.2
+      },
+      {
+        "date": "2026-07-02",
+        "water_level_m": 3.51,
+        "flow_rate_m3_s": 33.9
+      },
+      {
+        "date": "2026-07-01",
+        "water_level_m": 3.51,
+        "flow_rate_m3_s": 82.0
+      },
+      {
+        "date": "2026-06-30",
+        "water_level_m": 3.38,
+        "flow_rate_m3_s": 140.0
+      },
+      {
+        "date": "2026-06-27",
+        "water_level_m": 3.31,
+        "flow_rate_m3_s": 250.0
+      }
+    ]
+  }
+}
