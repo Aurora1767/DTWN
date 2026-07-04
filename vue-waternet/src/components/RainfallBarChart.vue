@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
-import type { RainfallHistoryPoint } from '@/types/platform'
+import type { RainfallHistoryPoint, WeatherForecast } from '@/types/platform'
 
 const props = defineProps<{
   points: RainfallHistoryPoint[]
   live?: boolean
+  forecast?: WeatherForecast | null
 }>()
 
 const hoverIndex = ref<number | null>(null)
@@ -14,6 +15,33 @@ const measuredHeight = ref(92)
 
 const chartPoints = computed(() => (props.live ? props.points.slice(-24) : []))
 
+const forecastPoints = computed(() => {
+  if (!props.forecast?.minutely?.length) return []
+  // aggregate 5-min minutely into hourly buckets to match history density
+  const buckets = new Map<string, { sum: number; count: number }>()
+  for (const m of props.forecast.minutely) {
+    const t = m.fxTime
+    // extract HH:MM, use HH:00 as bucket key
+    const hhmm = t.includes('T') ? t.slice(11, 16) : t.slice(0, 5)
+    const hourKey = hhmm.slice(0, 2) + ':00'
+    const val = parseFloat(m.precip) || 0
+    const b = buckets.get(hourKey) ?? { sum: 0, count: 0 }
+    b.sum += val
+    b.count += 1
+    buckets.set(hourKey, b)
+  }
+  return Array.from(buckets.entries()).map(([hour, b]) => ({
+    time: hour,
+    rainfall: parseFloat((b.sum).toFixed(2)),
+    isForecast: true,
+  }))
+})
+
+const allDisplayPoints = computed(() => {
+  const hist = chartPoints.value.map((p) => ({ ...p, isForecast: false }))
+  return [...hist, ...forecastPoints.value]
+})
+
 const chartWidth = 320
 const chartHeight = computed(() => measuredHeight.value)
 const padding = computed(() => ({ top: 8, right: 6, bottom: 4, left: 6 }))
@@ -21,11 +49,11 @@ const plotWidth = computed(() => chartWidth - padding.value.left - padding.value
 const plotHeight = computed(() => chartHeight.value - padding.value.top - padding.value.bottom)
 
 const rainfallMax = computed(() =>
-  Math.max(...chartPoints.value.map((point) => point.rainfall), 0.5),
+  Math.max(...allDisplayPoints.value.map((point) => point.rainfall), 0.5),
 )
 
 function xAt(index: number) {
-  const count = Math.max(chartPoints.value.length, 1)
+  const count = Math.max(allDisplayPoints.value.length, 1)
   const slotWidth = plotWidth.value / count
   return padding.value.left + slotWidth * index + slotWidth / 2
 }
@@ -35,8 +63,8 @@ function rainfallY(value: number) {
 }
 
 const bars = computed(() =>
-  chartPoints.value.map((point, index) => {
-    const count = Math.max(chartPoints.value.length, 1)
+  allDisplayPoints.value.map((point, index) => {
+    const count = Math.max(allDisplayPoints.value.length, 1)
     const slotWidth = plotWidth.value / count
     const barWidth = Math.max(3, slotWidth * 0.68)
     const x = padding.value.left + slotWidth * index + (slotWidth - barWidth) / 2
@@ -48,16 +76,17 @@ const bars = computed(() =>
       height: padding.value.top + plotHeight.value - y,
       value: point.rainfall,
       active: hoverIndex.value === index,
+      isForecast: point.isForecast,
     }
   }),
 )
 
 const axisTicks = computed(() =>
-  chartPoints.value.map((point, index) => ({
+  allDisplayPoints.value.map((point, index) => ({
     index,
     label: formatHourLabel(point.time, index),
     leftPercent: (xAt(index) / chartWidth) * 100,
-    visible: shouldShowAxisLabel(index, chartPoints.value.length),
+    visible: shouldShowAxisLabel(index, allDisplayPoints.value.length),
   })),
 )
 
@@ -65,7 +94,7 @@ const activePoint = computed(() => {
   if (hoverIndex.value === null) {
     return null
   }
-  return chartPoints.value[hoverIndex.value] ?? null
+  return allDisplayPoints.value[hoverIndex.value] ?? null
 })
 
 const activeX = computed(() => (hoverIndex.value === null ? null : xAt(hoverIndex.value)))
@@ -118,7 +147,7 @@ function formatHourLabel(value: string, index: number) {
 
 function resolveHoverIndex(clientX: number) {
   const wrap = plotWrapRef.value
-  if (!wrap || chartPoints.value.length === 0) {
+  if (!wrap || allDisplayPoints.value.length === 0) {
     hoverIndex.value = null
     return
   }
@@ -126,7 +155,7 @@ function resolveHoverIndex(clientX: number) {
   const relativeX = ((clientX - rect.left) / rect.width) * chartWidth
   let nearest = 0
   let nearestDistance = Number.POSITIVE_INFINITY
-  chartPoints.value.forEach((_, index) => {
+  allDisplayPoints.value.forEach((_, index) => {
     const distance = Math.abs(relativeX - xAt(index))
     if (distance < nearestDistance) {
       nearestDistance = distance
@@ -167,13 +196,13 @@ onUnmounted(() => {
 <template>
   <div class="env-rainfall-chart">
     <div class="env-rainfall-chart-head">
-      <span>24h 逐时降雨</span>
+      <span>逐时降雨（含预报）</span>
       <strong>{{ displayValue }}</strong>
     </div>
 
-    <div v-if="!props.live" class="env-rainfall-empty">离线</div>
+    <div v-if="!props.live && !forecastPoints.length" class="env-rainfall-empty">离线</div>
 
-    <div v-else-if="chartPoints.length === 0" class="env-rainfall-empty">暂无降雨时序数据</div>
+    <div v-else-if="allDisplayPoints.length === 0" class="env-rainfall-empty">暂无降雨时序数据</div>
 
     <div v-else class="env-rainfall-chart-body">
       <div
@@ -206,7 +235,7 @@ onUnmounted(() => {
             :y="bar.y"
             :width="bar.width"
             :height="bar.height"
-            :class="['env-rainfall-bar', { active: bar.active }]"
+            :class="['env-rainfall-bar', { active: bar.active, forecast: bar.isForecast }]"
             rx="1"
           />
 

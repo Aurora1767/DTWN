@@ -13,8 +13,10 @@ import type {
   HistoricalSensorRecord,
   HydroScenarioSnapshot,
   NetworkOverview,
+  NodeHydrologySeries,
   RainfallOverview,
   RiverSegment,
+  SegmentProfile,
   SensorSnapshot,
   SimulationRequest,
   SimulationResult,
@@ -23,6 +25,7 @@ import type {
   WaterHistoryPoint,
   WaterQuantityOverview,
   WaterStationSnapshot,
+  WeatherForecast,
 } from '@/types/platform'
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? '/api'
@@ -103,6 +106,42 @@ export function fetchStations() {
   return getData<SensorSnapshot[]>('/realtime/stations', mockStations)
 }
 
+export async function fetchSegmentProfile(segmentCode: string): Promise<SegmentProfile | null> {
+  try {
+    const response = await fetch(`${API_BASE}/network/segments/${encodeURIComponent(segmentCode)}/profile`)
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const body = (await response.json()) as ApiResponse<SegmentProfile>
+    if (body.code !== 0 || !body.data) {
+      return null
+    }
+    return body.data
+  } catch (error) {
+    console.warn('[waternet] segment profile request failed', error)
+    return null
+  }
+}
+
+export async function fetchNodeSeries(nodeCode: string, recentHours = 72): Promise<NodeHydrologySeries | null> {
+  try {
+    const response = await fetch(
+      `${API_BASE}/network/nodes/${encodeURIComponent(nodeCode)}/series?recentHours=${recentHours}`,
+    )
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const body = (await response.json()) as ApiResponse<NodeHydrologySeries>
+    if (body.code !== 0 || !body.data) {
+      return null
+    }
+    return body.data
+  } catch (error) {
+    console.warn('[waternet] node series request failed', error)
+    return null
+  }
+}
+
 const mockEnvironment: EnvironmentSnapshot = {
   weatherText: '晴',
   temperature: '25.6',
@@ -127,6 +166,31 @@ export async function fetchEnvironmentSnapshotLive(): Promise<EnvironmentSnapsho
     console.warn('[waternet] environment snapshot request failed; keeping last value', error)
     return null
   }
+}
+
+export async function fetchWeatherForecast(): Promise<WeatherForecast | null> {
+  try {
+    const response = await fetch(`${API_BASE}/weather/forecast`)
+    if (!response.ok) throw new Error(`${response.status}`)
+    const body = (await response.json()) as ApiResponse<WeatherForecast>
+    return body.data
+  } catch {
+    return mockForecast
+  }
+}
+
+const mockForecast: WeatherForecast = {
+  daily: [
+    { fxDate: new Date().toISOString().slice(0, 10), textDay: '多云', textNight: '阴', tempMax: '28', tempMin: '22', windSpeedDay: '3.5', windScaleDay: '2', windDirDay: '东南风', precip: '2.0', humidity: '72' },
+    { fxDate: new Date(Date.now() + 86400000).toISOString().slice(0, 10), textDay: '小雨', textNight: '中雨', tempMax: '26', tempMin: '20', windSpeedDay: '4.2', windScaleDay: '3', windDirDay: '东风', precip: '12.5', humidity: '85' },
+    { fxDate: new Date(Date.now() + 172800000).toISOString().slice(0, 10), textDay: '阴', textNight: '多云', tempMax: '27', tempMin: '21', windSpeedDay: '2.8', windScaleDay: '2', windDirDay: '北风', precip: '0.5', humidity: '68' },
+  ],
+  minutely: Array.from({ length: 24 }, (_, i) => ({
+    fxTime: new Date(Date.now() + i * 300000).toISOString(),
+    precip: i < 4 ? '0.0' : i < 12 ? (0.3 + i * 0.2).toFixed(1) : '0.0',
+    type: 'rain',
+  })),
+  updatedAt: new Date().toISOString(),
 }
 
 export function fetchWarnings() {

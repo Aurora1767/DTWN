@@ -5,9 +5,11 @@ import {
   fetchEnvironmentSnapshot,
   fetchEnvironmentSnapshotLive,
   fetchNetworkOverview,
+  fetchNodeSeries,
   fetchRainfallOverview,
   fetchRainfallOverviewLive,
   fetchRiverNetworkSegments,
+  fetchSegmentProfile,
   fetchStations,
   fetchWarnings,
   fetchWaterNodes,
@@ -28,13 +30,18 @@ import type {
   MapLayerKey,
   MapLayerState,
   NetworkOverview,
+  NodeHydrologySeries,
   RainfallOverview,
+  RiverSegment,
+  SegmentProfile,
+  SelectedFeature,
   SensorSnapshot,
   SimulationRequest,
   SimulationResult,
   ViewMode,
   WarningEvent,
   WaterQuantityOverview,
+  WaterNode,
 } from '@/types/platform'
 
 export const usePlatformStore = defineStore('platform', () => {
@@ -65,6 +72,48 @@ export const usePlatformStore = defineStore('platform', () => {
     warnings: true,
     simulation: true,
   })
+
+  const selectedFeature = ref<SelectedFeature | null>(null)
+  const segmentProfile = ref<SegmentProfile | null>(null)
+  const nodeSeries = ref<NodeHydrologySeries | null>(null)
+  const insightLoading = ref(false)
+  let insightRequestId = 0
+
+  async function selectFeature(feature: SelectedFeature | null) {
+    selectedFeature.value = feature
+    const requestId = insightRequestId + 1
+    insightRequestId = requestId
+
+    if (!feature) {
+      segmentProfile.value = null
+      nodeSeries.value = null
+      insightLoading.value = false
+      return
+    }
+
+    insightLoading.value = true
+    try {
+      if (feature.type === 'segment') {
+        const profile = await fetchSegmentProfile(feature.code)
+        if (insightRequestId !== requestId) return
+        segmentProfile.value = profile
+        nodeSeries.value = null
+      } else {
+        const series = await fetchNodeSeries(feature.code, 72)
+        if (insightRequestId !== requestId) return
+        nodeSeries.value = series
+        segmentProfile.value = null
+      }
+    } finally {
+      if (insightRequestId === requestId) {
+        insightLoading.value = false
+      }
+    }
+  }
+
+  function clearSelection() {
+    void selectFeature(null)
+  }
 
   const averageWaterLevel = computed(() => {
     const sum = stations.value.reduce((total, station) => total + station.waterLevel, 0)
@@ -157,8 +206,11 @@ export const usePlatformStore = defineStore('platform', () => {
     ])
     network.value = {
       ...networkData,
-      segments: riverSegments.length > 0 ? riverSegments : networkData.segments,
-      nodes: waterNodes.length > 0 ? waterNodes : networkData.nodes,
+      segments:
+        riverSegments.length > 0
+          ? mergeSegmentHydrology(riverSegments, networkData.segments)
+          : networkData.segments,
+      nodes: waterNodes.length > 0 ? mergeNodeHydrology(waterNodes, networkData.nodes) : networkData.nodes,
     }
     stations.value = stationData
     warnings.value = warningData
@@ -201,9 +253,15 @@ export const usePlatformStore = defineStore('platform', () => {
     latestSimulation,
     loadingSimulation,
     mapLayers,
+    selectedFeature,
+    segmentProfile,
+    nodeSeries,
+    insightLoading,
     averageWaterLevel,
     totalFlow,
     highRiskCount,
+    selectFeature,
+    clearSelection,
     loadDashboard,
     refreshEnvironment,
     startEnvironmentPolling,
@@ -216,3 +274,43 @@ export const usePlatformStore = defineStore('platform', () => {
     setMapLayer,
   }
 })
+
+function mergeSegmentHydrology(localSegments: RiverSegment[], apiSegments: RiverSegment[]) {
+  const byCode = new Map(apiSegments.map((segment) => [segment.code, segment]))
+  const byReachId = new Map(
+    apiSegments
+      .filter((segment) => typeof segment.reachId === 'number')
+      .map((segment) => [segment.reachId as number, segment]),
+  )
+
+  return localSegments.map((segment) => {
+    const apiSegment = byCode.get(segment.code) ?? (segment.reachId ? byReachId.get(segment.reachId) : undefined)
+    return apiSegment
+      ? {
+          ...segment,
+          code: apiSegment.code,
+          name: apiSegment.name ?? segment.name,
+          reachId: apiSegment.reachId ?? segment.reachId,
+          hydrologyStats: apiSegment.hydrologyStats,
+          startNodeCode: apiSegment.startNodeCode ?? segment.startNodeCode,
+          endNodeCode: apiSegment.endNodeCode ?? segment.endNodeCode,
+        }
+      : segment
+  })
+}
+
+function mergeNodeHydrology(localNodes: WaterNode[], apiNodes: WaterNode[]) {
+  const byCode = new Map(apiNodes.map((node) => [node.code, node]))
+  return localNodes.map((node) => {
+    const apiNode = byCode.get(node.code)
+    return apiNode
+      ? {
+          ...node,
+          latestHydrology: apiNode.latestHydrology,
+          connectedNodeCodes: apiNode.connectedNodeCodes ?? node.connectedNodeCodes,
+          connectedSegmentCodes: apiNode.connectedSegmentCodes ?? node.connectedSegmentCodes,
+          connectedReachIds: apiNode.connectedReachIds ?? node.connectedReachIds,
+        }
+      : node
+  })
+}

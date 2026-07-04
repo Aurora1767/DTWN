@@ -26,6 +26,9 @@ const plot = { width: 1200, height: 288, left: 42, right: 1168, top: 18, bottom:
 const storageKey = 'waternet:hydro-process-series'
 const zoomWindows = [12, 24, 48, 96, Number.POSITIVE_INFINITY]
 
+const props = defineProps<{ collapsed?: boolean }>()
+const emit = defineEmits<{ (e: 'update:collapsed', value: boolean): void }>()
+
 const activeKey = ref<HydroChannelKey>('taihu')
 const zoomIndex = ref(1)
 const hoverIndex = ref<number | null>(null)
@@ -234,13 +237,13 @@ function formatTime(timestamp?: string) {
 </script>
 
 <template>
-  <section class="hydro-process-panel" @wheel="handleWheel">
+  <section class="hydro-process-panel" :class="{ 'is-collapsed': props.collapsed }" @wheel="!props.collapsed && handleWheel($event)">
     <header class="hydro-process-header">
       <div class="hydro-process-title">
         <span>PROCESS</span>
         <strong>水情过程线</strong>
       </div>
-      <div class="hydro-channel-tabs" aria-label="过程线切换">
+      <div v-show="!props.collapsed" class="hydro-channel-tabs" aria-label="过程线切换">
         <button
           v-for="channel in channels"
           :key="channel.key"
@@ -252,14 +255,25 @@ function formatTime(timestamp?: string) {
           <strong>{{ formatChannelValue(channel.key) }}</strong>
         </button>
       </div>
-      <div class="hydro-zoom-actions">
-        <button type="button" title="放大" @click="zoomIn">+</button>
-        <button type="button" title="缩小" @click="zoomOut">-</button>
-        <button type="button" title="重置缩放" @click="resetZoom">{{ zoomText }}</button>
+      <div class="hydro-header-right">
+        <div v-show="!props.collapsed" class="hydro-zoom-actions">
+          <button type="button" title="放大" @click="zoomIn">+</button>
+          <button type="button" title="缩小" @click="zoomOut">-</button>
+          <button type="button" title="重置缩放" @click="resetZoom">{{ zoomText }}</button>
+        </div>
+        <button
+          type="button"
+          class="hydro-toggle-btn"
+          :title="props.collapsed ? '展开水情过程线' : '收起水情过程线'"
+          :aria-expanded="!props.collapsed"
+          @click="$emit('update:collapsed', !props.collapsed)"
+        >
+          {{ props.collapsed ? '▲ 展开' : '▼ 收起' }}
+        </button>
       </div>
     </header>
 
-    <div class="hydro-chart-wrap">
+    <div v-show="!collapsed" class="hydro-chart-wrap">
       <svg
         class="hydro-chart"
         :viewBox="`0 0 ${plot.width} ${plot.height}`"
@@ -336,7 +350,7 @@ function formatTime(timestamp?: string) {
       <div v-if="visibleSeries.length === 0" class="hydro-empty">等待实时数据接入</div>
     </div>
 
-    <footer class="hydro-process-footer">
+    <footer v-show="!props.collapsed" class="hydro-process-footer">
       <span :class="{ live: !loading }">{{ loading ? '同步中' : '实时同步' }}</span>
       <em>最近更新：{{ formatTime(lastUpdatedAt) }}</em>
       <b>鼠标滚轮可缩放</b>

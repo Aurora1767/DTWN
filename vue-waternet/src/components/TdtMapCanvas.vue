@@ -23,15 +23,15 @@ let map: any
 let overlays: any[] = []
 let waterSurfaces: GeoFeature[] = []
 let waterShorelines: GeoFeature[] = []
-let hasAutoFittedViewport = false
-
+let pipeShorelines: GeoFeature[] = []
+let pipeSurfaces: GeoFeature[] = []
+const showPipeShorelines = ref(true)
+const showPipeSurfaces   = ref(true)
 const token = (import.meta.env.VITE_TIANDITU_TOKEN ?? '').trim()
 const WATER_SURFACES_URL = `${import.meta.env.BASE_URL}data/water-surfaces.geojson`
 const WATER_SHORELINES_URL = `${import.meta.env.BASE_URL}data/water-shorelines.geojson`
-const DEFAULT_CENTER: LngLatPair = [120.274, 31.486]
-const INITIAL_ZOOM = 12
-const MIN_ZOOM = 5
-const MAX_ZOOM = 18
+const PIPE_SHORELINES_URL = `${import.meta.env.BASE_URL}data/pipe-shorelines.geojson`
+const PIPE_SURFACES_URL   = `${import.meta.env.BASE_URL}data/pipe-surfaces.geojson`
 const NODE_LABELS: Record<string, string> = {
   N01: '太湖',
   N03: '京杭大运河南',
@@ -83,7 +83,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('resize', refreshMapSize)
   clearLayers()
-  hasAutoFittedViewport = false
   map = undefined
 })
 
@@ -104,11 +103,9 @@ async function initializeMap() {
     await loadTdtScript(token)
     const T = window.T
     map = new T.Map(mapContainer.value)
-    map.centerAndZoom(new T.LngLat(DEFAULT_CENTER[0], DEFAULT_CENTER[1]), INITIAL_ZOOM)
+    map.centerAndZoom(new T.LngLat(120.274, 31.486), 12)
     setSatelliteMapType()
-    applyZoomConstraints()
     map.enableScrollWheelZoom?.()
-    map.addEventListener?.('zoomend', keepZoomInRange)
     await loadWaterBoundaryData()
     status.value = 'ready'
     statusMessage.value = ''
@@ -124,22 +121,6 @@ function setSatelliteMapType() {
   const satelliteMapType = window.TMAP_SATELLITE_MAP
   if (satelliteMapType && map?.setMapType) {
     map.setMapType(satelliteMapType)
-  }
-}
-
-function applyZoomConstraints() {
-  map?.setMinZoom?.(MIN_ZOOM)
-  map?.setMaxZoom?.(MAX_ZOOM)
-  keepZoomInRange()
-}
-
-function keepZoomInRange() {
-  const zoom = map?.getZoom?.()
-  if (typeof zoom !== 'number') return
-  if (zoom > MAX_ZOOM) {
-    map.setZoom?.(MAX_ZOOM)
-  } else if (zoom < MIN_ZOOM) {
-    map.setZoom?.(MIN_ZOOM)
   }
 }
 
@@ -170,9 +151,16 @@ function loadTdtScript(tdtToken: string) {
 }
 
 async function loadWaterBoundaryData() {
-  const [surfaces, shorelines] = await Promise.all([fetchGeoFeatures(WATER_SURFACES_URL), fetchGeoFeatures(WATER_SHORELINES_URL)])
-  waterSurfaces = surfaces
+  const [surfaces, shorelines, pipeLines, pipePolys] = await Promise.all([
+    fetchGeoFeatures(WATER_SURFACES_URL),
+    fetchGeoFeatures(WATER_SHORELINES_URL),
+    fetchGeoFeatures(PIPE_SHORELINES_URL),
+    fetchGeoFeatures(PIPE_SURFACES_URL),
+  ])
+  waterSurfaces   = surfaces
   waterShorelines = shorelines
+  pipeShorelines  = pipeLines
+  pipeSurfaces    = pipePolys
 }
 
 async function fetchGeoFeatures(url: string) {
@@ -189,8 +177,14 @@ async function fetchGeoFeatures(url: string) {
   }
 }
 
-function drawNetwork() {
-  if (!map || !window.T) return
+function togglePipeAll() {
+  const next = !(showPipeShorelines.value || showPipeSurfaces.value)
+  showPipeShorelines.value = next
+  showPipeSurfaces.value   = next
+  drawNetwork()
+}
+
+function drawNetwork() {  if (!map || !window.T) return
   const T = window.T
   clearLayers()
 
@@ -200,6 +194,8 @@ function drawNetwork() {
     drawWaterSurfaces(T, allPoints)
     drawWaterShorelines(T, allPoints)
     drawSegmentHitLines(T, allPoints)
+    if (showPipeShorelines.value) drawPipeShorelines(T, allPoints)
+    if (showPipeSurfaces.value)   drawPipeSurfaces(T, allPoints)
   }
 
   if (store.mapLayers.nodes) {
@@ -214,6 +210,7 @@ function drawNetwork() {
         fillOpacity: 0.86,
       })
       marker.addEventListener?.('click', () => {
+        store.selectFeature({ type: 'node', code: node.code, name: node.name })
         const infoWindow = new T.InfoWindow(buildNodePopup(node, stationByNode.value.get(node.code)), {
           minWidth: 240,
           maxWidth: 300,
@@ -250,15 +247,10 @@ function drawNetwork() {
     }
   }
 
-  fitViewportOnce(allPoints)
+  if (allPoints.length > 1) {
+    map.setViewport?.(allPoints)
+  }
   refreshMapSize()
-}
-
-function fitViewportOnce(allPoints: any[]) {
-  if (hasAutoFittedViewport || allPoints.length <= 1) return
-  map.setViewport?.(allPoints)
-  hasAutoFittedViewport = true
-  keepZoomInRange()
 }
 
 function refreshMapSize() {
@@ -280,6 +272,7 @@ function drawWaterSurfaces(T: any, allPoints: any[]) {
       })
       if (segment) {
         polygon.addEventListener?.('click', () => {
+          store.selectFeature({ type: 'segment', code: segment.code, name: segment.name })
           const infoWindow = new T.InfoWindow(buildSegmentPopup(segment), {
             minWidth: 260,
             maxWidth: 320,
@@ -310,6 +303,7 @@ function drawWaterShorelines(T: any, allPoints: any[]) {
       })
       if (segment) {
         polyline.addEventListener?.('click', () => {
+          store.selectFeature({ type: 'segment', code: segment.code, name: segment.name })
           const infoWindow = new T.InfoWindow(buildSegmentPopup(segment), {
             minWidth: 260,
             maxWidth: 320,
@@ -341,6 +335,7 @@ function drawSegmentHitLines(T: any, allPoints: any[]) {
       lineStyle: 'solid',
     })
     hitLine.addEventListener?.('click', () => {
+      store.selectFeature({ type: 'segment', code: segment.code, name: segment.name })
       const infoWindow = new T.InfoWindow(buildSegmentPopup(segment), {
         minWidth: 260,
         maxWidth: 320,
@@ -353,6 +348,137 @@ function drawSegmentHitLines(T: any, allPoints: any[]) {
     map.addOverLay(hitLine)
     overlays.push(hitLine)
   }
+}
+
+function makeArrowIcon(color: string): HTMLCanvasElement {
+  const size = 56
+  const cv = document.createElement('canvas')
+  cv.width = size
+  cv.height = size
+  const ctx = cv.getContext('2d')!
+  const cx = size / 2
+  const cy = size / 2
+
+  // glow pass
+  ctx.shadowColor = color
+  ctx.shadowBlur = 12
+
+  // shaft
+  ctx.strokeStyle = color
+  ctx.lineWidth = 5
+  ctx.lineCap = 'round'
+  ctx.beginPath()
+  ctx.moveTo(cx - 14, cy)
+  ctx.lineTo(cx + 6, cy)
+  ctx.stroke()
+
+  // arrowhead (filled chevron pointing right)
+  ctx.fillStyle = color
+  ctx.beginPath()
+  ctx.moveTo(cx + 6,  cy - 9)
+  ctx.lineTo(cx + 20, cy)
+  ctx.lineTo(cx + 6,  cy + 9)
+  ctx.lineTo(cx + 10, cy)
+  ctx.closePath()
+  ctx.fill()
+
+  return cv
+}
+
+function drawFlowArrows(T: any) {
+  for (const segment of store.network.segments) {
+    const coords = segment.coordinates
+    if (coords.length < 2) continue
+    const flow = segment.hydrologyStats?.maxFlow
+    if (flow == null || Math.abs(flow) < 0.01) continue
+
+    // pick midpoint pair
+    const mid = Math.floor(coords.length / 2)
+    const a = coords[mid - 1]!
+    const b = coords[mid]!
+
+    const lng = (a.lng + b.lng) / 2
+    const lat = (a.lat + b.lat) / 2
+
+    // geographic heading: dx east+, dy north+
+    // screen: east = +x (right=0°), north = -y (up)
+    // atan2 gives angle from east axis, clockwise on screen = negate y
+    const dLng = b.lng - a.lng
+    const dLat = b.lat - a.lat
+    // convert to screen angle (east=0, clockwise positive)
+    let angleDeg = Math.atan2(-dLat, dLng) * (180 / Math.PI)
+    // flip if flow is negative (reversed direction)
+    if (flow < 0) angleDeg += 180
+
+    const color = flow > 0 ? '#00ffc8' : '#ffb830'
+    const cv = makeArrowIcon(color)
+    const dataUrl = cv.toDataURL()
+
+    const icon = new T.Icon({
+      iconUrl: dataUrl,
+      iconSize: new T.Point(56, 56),
+      iconAnchor: new T.Point(28, 28),
+    })
+    const marker = new T.Marker(new T.LngLat(lng, lat), { icon })
+    marker.addEventListener?.('add', () => {
+      const el = marker.getElement?.() as HTMLElement | undefined
+      if (el) {
+        const img = el.querySelector('img') as HTMLImageElement | null ?? el
+        img.style.transformOrigin = '50% 50%'
+        img.style.transform = `rotate(${angleDeg}deg)`
+      }
+    })
+    map.addOverLay(marker)
+    overlays.push(marker)
+  }
+}
+
+
+function drawPipeShorelines(T: any, allPoints: any[]) {
+  for (const feature of pipeShorelines) {
+    for (const line of lineStrings(feature.geometry)) {
+      const pts = ringToTdtPoints(T, webMercNormalizeLine(line), allPoints)
+      if (pts.length < 2) continue
+      const pl = new T.Polyline(pts, {
+        color: '#ff6ec7',
+        weight: 2.5,
+        opacity: 0.88,
+        lineStyle: 'solid',
+      })
+      map.addOverLay(pl)
+      overlays.push(pl)
+    }
+  }
+}
+
+function drawPipeSurfaces(T: any, allPoints: any[]) {
+  for (const feature of pipeSurfaces) {
+    for (const ring of surfaceRings(feature.geometry)) {
+      const pts = ringToTdtPoints(T, webMercNormalizeLine(ring), allPoints)
+      if (pts.length < 3) continue
+      const poly = new T.Polygon(pts, {
+        color: '#c84dff',
+        weight: 1.5,
+        opacity: 0.72,
+        fillColor: '#a020f0',
+        fillOpacity: 0.18,
+      })
+      map.addOverLay(poly)
+      overlays.push(poly)
+    }
+  }
+}
+
+function webMercNormalizeLine(coords: [number, number][]): [number, number][] {
+  if (!coords.length) return coords
+  const [x, y] = coords[0]!
+  if (Math.abs(x) > 180 || Math.abs(y) > 90) {
+    return coords.map(([cx, cy]) => {
+      const R = 6378137
+      return [(cx / R) * (180 / Math.PI), (2 * Math.atan(Math.exp(cy / R)) - Math.PI / 2) * (180 / Math.PI)] as [number, number]
+    })
+  }
+  return coords
 }
 
 function findSegmentByFeature(feature: GeoFeature) {
@@ -518,14 +644,25 @@ function buildNodePopup(node: WaterNode, station?: SensorSnapshot) {
     node.connectedNodeCodes && node.connectedNodeCodes.length > 0 ? node.connectedNodeCodes.join(', ') : '无'
   const connectedSegments =
     node.connectedSegmentCodes && node.connectedSegmentCodes.length > 0 ? node.connectedSegmentCodes.join(', ') : '无'
-  const stationHtml = station
+  const latest = node.latestHydrology
+  const latestHtml = latest
     ? `
+      <div class="tdt-popup-row"><span>最新小时</span><strong>${formatHour(latest.hour)}</strong></div>
+      <div class="tdt-popup-row"><span>最新水位</span><strong>${formatNumber(latest.waterLevel, 2)} m</strong></div>
+      <div class="tdt-popup-row"><span>最新流量</span><strong>${formatNumber(latest.flow, 1)} m3/s</strong></div>
+    `
+    : ''
+  const stationHtml =
+    !latest && station
+      ? `
       <div class="tdt-popup-row"><span>水位</span><strong>${station.waterLevel.toFixed(2)} m</strong></div>
       <div class="tdt-popup-row"><span>流量</span><strong>${station.flow.toFixed(1)} m3/s</strong></div>
       <div class="tdt-popup-row"><span>流速</span><strong>${station.velocity.toFixed(2)} m/s</strong></div>
       <div class="tdt-popup-row"><span>状态</span><strong>${station.status}</strong></div>
     `
-    : '<div class="tdt-popup-row"><span>测站</span><strong>未关联实时数据</strong></div>'
+      : !latest
+        ? '<div class="tdt-popup-row"><span>测站</span><strong>未关联实时数据</strong></div>'
+        : ''
 
   return `
     <div class="tdt-popup">
@@ -535,6 +672,7 @@ function buildNodePopup(node: WaterNode, station?: SensorSnapshot) {
       <div class="tdt-popup-row"><span>边界类型</span><strong>${node.boundaryType}</strong></div>
       <div class="tdt-popup-row"><span>相邻节点</span><strong>${connectedNodes}</strong></div>
       <div class="tdt-popup-row"><span>关联河段</span><strong>${connectedSegments}</strong></div>
+      ${latestHtml}
       ${stationHtml}
     </div>
   `
@@ -556,11 +694,21 @@ function buildSegmentPopup(segment: RiverSegment) {
       <div class="tdt-popup-row"><span>终点节点</span><strong>${endLabel}</strong></div>
       <div class="tdt-popup-row"><span>河段长度</span><strong>${segment.lengthMeters.toFixed(0)} m</strong></div>
       <div class="tdt-popup-row"><span>近似宽度</span><strong>${segment.widthMeters.toFixed(2)} m</strong></div>
-      <div class="tdt-popup-row"><span>离散步长 dx</span><strong>${segment.dx?.toFixed(0) ?? '--'} m</strong></div>
-      <div class="tdt-popup-row"><span>Chezy</span><strong>${segment.chezy?.toFixed(2) ?? '--'}</strong></div>
-      <div class="tdt-popup-row"><span>河底高程</span><strong>${segment.bedElevation?.toFixed(2) ?? '--'} m</strong></div>
+      <div class="tdt-popup-row"><span>最大流量</span><strong>${formatNumber(segment.hydrologyStats?.maxFlow, 1)} m3/s</strong></div>
+      <div class="tdt-popup-row"><span>最小流量</span><strong>${formatNumber(segment.hydrologyStats?.minFlow, 1)} m3/s</strong></div>
+      <div class="tdt-popup-row"><span>最高水位</span><strong>${formatNumber(segment.hydrologyStats?.maxWaterLevel, 2)} m</strong></div>
+      <div class="tdt-popup-row"><span>最低水位</span><strong>${formatNumber(segment.hydrologyStats?.minWaterLevel, 2)} m</strong></div>
+      <div class="tdt-popup-row"><span>统计时刻</span><strong>${formatHour(segment.hydrologyStats?.profileHour)}</strong></div>
     </div>
   `
+}
+
+function formatNumber(value: number | null | undefined, digits: number) {
+  return typeof value === 'number' && Number.isFinite(value) ? value.toFixed(digits) : '--'
+}
+
+function formatHour(value: number | null | undefined) {
+  return typeof value === 'number' && Number.isFinite(value) ? `第 ${value} 小时` : '--'
 }
 
 function buildStructurePopup(structure: HydraulicStructure) {
@@ -613,6 +761,13 @@ type LngLatPair = [number, number]
       <strong>{{ status === 'missing-token' ? '等待天地图密钥' : '天地图状态' }}</strong>
       <span>{{ statusMessage }}</span>
       <small>河网、节点与弹窗逻辑已接入；配置密钥后会自动加载真实底图。</small>
+    </div>
+    <div class="tdt-pipe-panel" aria-label="管网图层控制">
+      <button
+        type="button"
+        :class="{ active: showPipeShorelines || showPipeSurfaces }"
+        @click="togglePipeAll()"
+      >管网</button>
     </div>
   </div>
 </template>

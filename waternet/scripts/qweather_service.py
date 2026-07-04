@@ -187,6 +187,41 @@ if __name__ == "__main__":
         sys.stdout.buffer.write(b"\n")
         sys.exit(0)
 
+    if "--json-forecast" in sys.argv:
+        service = QWeatherService()
+        data = service.get_all_weather_data()
+        daily_raw = data.get("daily", {}).get("daily", []) if isinstance(data.get("daily"), dict) else []
+        minutely_raw = data.get("minutely", {}).get("list", []) if isinstance(data.get("minutely"), dict) else []
+        forecast = {
+            "daily": [
+                {
+                    "fxDate": d.get("fxDate", ""),
+                    "textDay": d.get("textDay", ""),
+                    "textNight": d.get("textNight", ""),
+                    "tempMax": d.get("tempMax", ""),
+                    "tempMin": d.get("tempMin", ""),
+                    "windSpeedDay": d.get("windSpeedDay", ""),
+                    "windScaleDay": d.get("windScaleDay", ""),
+                    "windDirDay": d.get("windDirDay", ""),
+                    "precip": d.get("precip", "0"),
+                    "humidity": d.get("humidity", ""),
+                }
+                for d in daily_raw
+            ],
+            "minutely": [
+                {
+                    "fxTime": m.get("fxTime", ""),
+                    "precip": m.get("precip", "0"),
+                    "type": m.get("type", "rain"),
+                }
+                for m in minutely_raw
+            ],
+        }
+        payload = json.dumps(forecast, ensure_ascii=False)
+        sys.stdout.buffer.write(payload.encode("utf-8"))
+        sys.stdout.buffer.write(b"\n")
+        sys.exit(0)
+
     print("正在启动数字孪生水网 - 气象底板集成模块自检...")
     try:
         service = QWeatherService()

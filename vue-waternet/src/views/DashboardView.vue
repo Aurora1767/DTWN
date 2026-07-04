@@ -2,9 +2,11 @@
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 
 import MainMapStage from '@/components/MainMapStage.vue'
+import BasinOverviewMap from '@/components/BasinOverviewMap.vue'
 import EnvMetricsPanel from '@/components/EnvMetricsPanel.vue'
 import HydrologicalStationsPanel from '@/components/HydrologicalStationsPanel.vue'
 import MiniLineChart from '@/components/MiniLineChart.vue'
+import NetworkInsightPanel from '@/components/NetworkInsightPanel.vue'
 import PanelShell from '@/components/PanelShell.vue'
 import { usePlatformStore } from '@/stores/platform'
 
@@ -57,18 +59,7 @@ async function notifyLayoutChanged() {
       </button>
 
       <template v-if="!leftCollapsed">
-        <PanelShell title="实时水情" eyebrow="MONITOR">
-          <div class="metric-row">
-            <div>
-              <span>平均水位</span>
-              <strong>{{ store.averageWaterLevel }} m</strong>
-            </div>
-            <div>
-              <span>总流量</span>
-              <strong>{{ store.totalFlow }} m3/s</strong>
-            </div>
-          </div>
-        </PanelShell>
+        <BasinOverviewMap />
 
         <EnvMetricsPanel
           :snapshot="store.environment"
@@ -119,55 +110,7 @@ async function notifyLayoutChanged() {
       </button>
 
       <template v-if="!rightCollapsed">
-        <PanelShell title="模型运行" eyebrow="SIMULATION">
-          <div class="run-summary">
-            <span>{{ store.latestSimulation.scenarioName }}</span>
-            <strong>{{ store.latestSimulation.status }}</strong>
-            <small>{{ store.latestSimulation.runnerType }} RUNNER</small>
-          </div>
-        </PanelShell>
-
-        <PanelShell title="预演曲线" eyebrow="CURVE">
-          <MiniLineChart
-            :values="store.latestSimulation.results[0]?.series.map((point) => point.waterLevel) ?? []"
-            color="#00f2ff"
-          />
-        </PanelShell>
-
-        <PanelShell title="模拟指标" eyebrow="METRIC">
-          <div class="metric-row">
-            <div>
-              <span>最高水位</span>
-              <strong>{{ store.latestSimulation.results[0]?.maxWaterLevel ?? '-' }} m</strong>
-            </div>
-            <div>
-              <span>平均流速</span>
-              <strong>{{ store.latestSimulation.results[0]?.averageVelocity ?? '-' }} m/s</strong>
-            </div>
-          </div>
-          <div class="metric-row">
-            <div>
-              <span>最大流量</span>
-              <strong>{{ store.latestSimulation.results[0]?.maxFlow ?? '-' }} m3/s</strong>
-            </div>
-            <div>
-              <span>河段</span>
-              <strong>{{ store.latestSimulation.results[0]?.segmentName ?? '-' }}</strong>
-            </div>
-          </div>
-        </PanelShell>
-
-        <PanelShell title="风险预警" eyebrow="WARNING">
-          <div class="warning-list">
-            <div v-for="warning in store.warnings" :key="warning.id" class="warning-item">
-              <div>
-                <strong>{{ warning.targetName }}</strong>
-                <span>{{ warning.metric }} {{ warning.value }} / {{ warning.threshold }}</span>
-              </div>
-              <em :class="warning.level.toLowerCase()">{{ warning.level }}</em>
-            </div>
-          </div>
-        </PanelShell>
+        <NetworkInsightPanel class="insight-panel-slot" />
 
         <PanelShell title="预警统计" eyebrow="ALERT">
           <div class="metric-row">

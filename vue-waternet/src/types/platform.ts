@@ -22,6 +22,7 @@ export interface RiverSegment {
   startNodeCode: string
   endNodeCode: string
   coordinates: Coordinate[]
+  hydrologyStats?: SegmentHydrologyStats
 }
 
 export interface WaterNode {
@@ -35,6 +36,22 @@ export interface WaterNode {
   connectedNodeCodes?: string[]
   connectedSegmentCodes?: string[]
   connectedReachIds?: number[]
+  latestHydrology?: NodeLatestHydrology
+}
+
+export interface SegmentHydrologyStats {
+  maxFlow?: number | null
+  minFlow?: number | null
+  maxWaterLevel?: number | null
+  minWaterLevel?: number | null
+  profileHour?: number | null
+  sampleCount?: number | null
+}
+
+export interface NodeLatestHydrology {
+  hour?: number | null
+  waterLevel?: number | null
+  flow?: number | null
 }
 
 export interface HydraulicStructure {
@@ -147,12 +164,68 @@ export interface NetworkOverview {
   structures: HydraulicStructure[]
 }
 
+export interface SegmentProfilePoint {
+  sectionNo: number
+  distanceMeters: number
+  waterLevel: number | null
+  flow: number | null
+}
+
+export interface SegmentProfile {
+  segmentCode: string
+  reachId: number | null
+  startNodeCode: string | null
+  endNodeCode: string | null
+  profileHour: number | null
+  points: SegmentProfilePoint[]
+}
+
+export interface NodeHydrologyPoint {
+  hour: number
+  waterLevel: number | null
+  flow: number | null
+}
+
+export interface NodeHydrologySeries {
+  nodeCode: string
+  points: NodeHydrologyPoint[]
+}
+
+export type SelectedFeature =
+  | { type: 'node'; code: string; name: string }
+  | { type: 'segment'; code: string; name: string }
+
 export interface EnvironmentSnapshot {
   weatherText: string
   temperature: string
   windSpeed: string
   windScale: string
   observedAt: string
+}
+
+export interface WeatherForecast {
+  daily: DailyForecast[]
+  minutely: MinutelyPrecip[]
+  updatedAt: string
+}
+
+export interface DailyForecast {
+  fxDate: string
+  textDay: string
+  textNight: string
+  tempMax: string
+  tempMin: string
+  windSpeedDay: string
+  windScaleDay: string
+  windDirDay: string
+  precip: string
+  humidity: string
+}
+
+export interface MinutelyPrecip {
+  fxTime: string
+  precip: string
+  type: string
 }
 
 export interface WaterStationSnapshot {

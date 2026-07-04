@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.waternet.common.ApiResponse;
 import com.project.waternet.weather.dto.EnvironmentSnapshot;
+import com.project.waternet.weather.dto.WeatherForecast;
 
 @RestController
 @RequestMapping("/api/weather")
@@ -20,5 +21,10 @@ public class WeatherController {
 	@GetMapping("/environment")
 	public ApiResponse<EnvironmentSnapshot> environment() {
 		return ApiResponse.ok(qWeatherBridgeService.fetchEnvironmentSnapshot());
+	}
+
+	@GetMapping("/forecast")
+	public ApiResponse<WeatherForecast> forecast() {
+		return ApiResponse.ok(qWeatherBridgeService.fetchWeatherForecast());
 	}
 }

@@ -1,0 +1,33 @@
+# ── runtime logs ─────────────────────────────────────────────
+*.log
+vite-run.out.log
+spring-run.out.log
+spring-run.err.log
+
+# ── temp/debug scripts ────────────────────────────────────────
+_*.cjs
+_*.py
+_*.js
+
+# ── SQLite database (runtime data, not source) ────────────────
+waternet/data/*.db
+
+# ── Node.js ───────────────────────────────────────────────────
+node_modules/
+dist/
+.vite/
+
+# ── Java build output ─────────────────────────────────────────
+target/
+*.class
+*.jar
+
+# ── OS / IDE ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+
+# ── env secrets ───────────────────────────────────────────────
+.env
+.env.local
+.env.*.local

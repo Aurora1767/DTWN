@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 
 import HydroProcessPanel from '@/components/HydroProcessPanel.vue'
 import TdtMapCanvas from '@/components/TdtMapCanvas.vue'
@@ -7,6 +7,7 @@ import { usePlatformStore } from '@/stores/platform'
 
 const store = usePlatformStore()
 const CesiumMapCanvas = defineAsyncComponent(() => import('@/components/CesiumMapCanvas.vue'))
+const processCollapsed = ref(false)
 </script>
 
 <template>
@@ -25,7 +26,7 @@ const CesiumMapCanvas = defineAsyncComponent(() => import('@/components/CesiumMa
     <div class="stage-canvas">
       <TdtMapCanvas v-if="store.viewMode === '2d'" />
       <CesiumMapCanvas v-else />
-      <HydroProcessPanel />
+      <HydroProcessPanel v-model:collapsed="processCollapsed" />
     </div>
   </section>
 </template>

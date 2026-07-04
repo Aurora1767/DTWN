@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.waternet.weather.dto.EnvironmentSnapshot;
+import com.project.waternet.weather.dto.WeatherForecast;
+import com.project.waternet.weather.dto.WeatherForecast.DailyForecast;
+import com.project.waternet.weather.dto.WeatherForecast.MinutelyPrecip;
 
 @Service
 public class QWeatherBridgeService {
@@ -86,5 +89,121 @@ public class QWeatherBridgeService {
 
 	private EnvironmentSnapshot fallbackSnapshot() {
 		return new EnvironmentSnapshot("晴", "25.6", "3.2", "2", LocalDateTime.now().toString());
+	}
+
+
+	public WeatherForecast fetchWeatherForecast() {
+		try {
+			ProcessBuilder builder = new ProcessBuilder(pythonCommand, scriptPath.toString(), "--json-forecast");
+			builder.environment().put("PYTHONIOENCODING", "utf-8");
+			builder.redirectErrorStream(true);
+			Process process = builder.start();
+			String output;
+			try (BufferedReader reader = new BufferedReader(
+					new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+				output = reader.lines().reduce("", (left, right) -> left.isBlank() ? right : left + "\n" + right);
+			}
+			if (!process.waitFor(20, TimeUnit.SECONDS)) {
+				process.destroyForcibly();
+				throw new IllegalStateException("forecast timeout");
+			}
+			if (process.exitValue() != 0) throw new IllegalStateException("forecast failed: " + output);
+			String jsonLine = extractJsonLine(output);
+			JsonNode root = OBJECT_MAPPER.readTree(jsonLine);
+			java.util.List<DailyForecast> dailyList = new java.util.ArrayList<>();
+			JsonNode dailyArr = root.get("daily");
+			if (dailyArr != null && dailyArr.isArray()) {
+				for (JsonNode d : dailyArr) {
+					dailyList.add(new DailyForecast(text(d,"fxDate"),text(d,"textDay"),text(d,"textNight"),text(d,"tempMax"),text(d,"tempMin"),text(d,"windSpeedDay"),text(d,"windScaleDay"),text(d,"windDirDay"),text(d,"precip"),text(d,"humidity")));
+				}
+			}
+			java.util.List<MinutelyPrecip> minutelyList = new java.util.ArrayList<>();
+			JsonNode minutelyArr = root.get("minutely");
+			if (minutelyArr != null && minutelyArr.isArray()) {
+				for (JsonNode m : minutelyArr) {
+					minutelyList.add(new MinutelyPrecip(text(m,"fxTime"),text(m,"precip"),text(m,"type")));
+				}
+			}
+			return new WeatherForecast(dailyList, minutelyList, LocalDateTime.now().toString());
+		} catch (Exception ex) {
+			log.warn("Weather forecast unavailable: {}", ex.getMessage());
+			return fallbackForecast();
+		}
+	}
+
+	private WeatherForecast fallbackForecast() {
+		String today = java.time.LocalDate.now().toString();
+		String tomorrow = java.time.LocalDate.now().plusDays(1).toString();
+		String day3 = java.time.LocalDate.now().plusDays(2).toString();
+		java.util.List<DailyForecast> daily = java.util.List.of(
+			new DailyForecast(today, "多云", "阴", "28", "22", "3.5", "2", "东南风", "2.0", "72"),
+			new DailyForecast(tomorrow, "小雨", "中雨", "26", "20", "4.2", "3", "东风", "12.5", "85"),
+			new DailyForecast(day3, "阴", "多云", "27", "21", "2.8", "2", "北风", "0.5", "68"));
+		java.util.List<MinutelyPrecip> minutely = new java.util.ArrayList<>();
+		java.time.LocalDateTime now = java.time.LocalDateTime.now();
+		for (int i = 0; i < 24; i++) {
+			String t = now.plusMinutes(i * 5L).toString();
+			String p = i < 4 ? "0.0" : (i < 12 ? String.format("%.1f", 0.3 + i * 0.2) : "0.0");
+			minutely.add(new MinutelyPrecip(t, p, "rain"));
+		}
+		return new WeatherForecast(daily, minutely, now.toString());
+	}
+
+
+	public WeatherForecast fetchWeatherForecast() {
+		try {
+			ProcessBuilder builder = new ProcessBuilder(pythonCommand, scriptPath.toString(), "--json-forecast");
+			builder.environment().put("PYTHONIOENCODING", "utf-8");
+			builder.redirectErrorStream(true);
+			Process process = builder.start();
+			String output;
+			try (BufferedReader reader = new BufferedReader(
+					new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+				output = reader.lines().reduce("", (left, right) -> left.isBlank() ? right : left + "\n" + right);
+			}
+			if (!process.waitFor(20, TimeUnit.SECONDS)) {
+				process.destroyForcibly();
+				throw new IllegalStateException("forecast timeout");
+			}
+			if (process.exitValue() != 0) throw new IllegalStateException("forecast failed: " + output);
+			String jsonLine = extractJsonLine(output);
+			JsonNode root = OBJECT_MAPPER.readTree(jsonLine);
+			java.util.List<DailyForecast> dailyList = new java.util.ArrayList<>();
+			JsonNode dailyArr = root.get("daily");
+			if (dailyArr != null && dailyArr.isArray()) {
+				for (JsonNode d : dailyArr) {
+					dailyList.add(new DailyForecast(text(d,"fxDate"),text(d,"textDay"),text(d,"textNight"),text(d,"tempMax"),text(d,"tempMin"),text(d,"windSpeedDay"),text(d,"windScaleDay"),text(d,"windDirDay"),text(d,"precip"),text(d,"humidity")));
+				}
+			}
+			java.util.List<MinutelyPrecip> minutelyList = new java.util.ArrayList<>();
+			JsonNode minutelyArr = root.get("minutely");
+			if (minutelyArr != null && minutelyArr.isArray()) {
+				for (JsonNode m : minutelyArr) {
+					minutelyList.add(new MinutelyPrecip(text(m,"fxTime"),text(m,"precip"),text(m,"type")));
+				}
+			}
+			return new WeatherForecast(dailyList, minutelyList, LocalDateTime.now().toString());
+		} catch (Exception ex) {
+			log.warn("Weather forecast unavailable: {}", ex.getMessage());
+			return fallbackForecast();
+		}
+	}
+
+	private WeatherForecast fallbackForecast() {
+		String today = java.time.LocalDate.now().toString();
+		String tomorrow = java.time.LocalDate.now().plusDays(1).toString();
+		String day3 = java.time.LocalDate.now().plusDays(2).toString();
+		java.util.List<DailyForecast> daily = java.util.List.of(
+			new DailyForecast(today, "多云", "阴", "28", "22", "3.5", "2", "东南风", "2.0", "72"),
+			new DailyForecast(tomorrow, "小雨", "中雨", "26", "20", "4.2", "3", "东风", "12.5", "85"),
+			new DailyForecast(day3, "阴", "多云", "27", "21", "2.8", "2", "北风", "0.5", "68"));
+		java.util.List<MinutelyPrecip> minutely = new java.util.ArrayList<>();
+		java.time.LocalDateTime now = java.time.LocalDateTime.now();
+		for (int i = 0; i < 24; i++) {
+			String t = now.plusMinutes(i * 5L).toString();
+			String p = i < 4 ? "0.0" : (i < 12 ? String.format("%.1f", 0.3 + i * 0.2) : "0.0");
+			minutely.add(new MinutelyPrecip(t, p, "rain"));
+		}
+		return new WeatherForecast(daily, minutely, now.toString());
 	}
 }
