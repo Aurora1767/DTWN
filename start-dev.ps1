@@ -15,10 +15,14 @@ if ($mavenCandidates.Count -gt 0) {
 
 $backendCommand = "Set-Location '$backendDir'; & '$mavenCmd' spring-boot:run"
 $frontendCommand = "Set-Location '$frontendDir'; npm.cmd run dev -- --host 127.0.0.1"
+$modelDir = Join-Path $root "首页模型实时运行"
+$modelCommand = "Set-Location '$modelDir'; python app.py"
 
 Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-NoExit", "-Command", $backendCommand -WindowStyle Normal
 Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-NoExit", "-Command", $frontendCommand -WindowStyle Normal
+Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-NoExit", "-Command", $modelCommand -WindowStyle Normal
 
 Write-Host "Backend:  http://localhost:8080/api/network/overview"
 Write-Host "Frontend: http://127.0.0.1:5173/"
-Write-Host "Keep both opened PowerShell windows running while using the app."
+Write-Host "Model:    realtime Preissmann solver (1 step/min)"
+Write-Host "Keep all opened PowerShell windows running while using the app."

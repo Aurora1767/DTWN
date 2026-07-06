@@ -6,11 +6,10 @@ const route = useRoute()
 
 const navItems = [
   { label: '数据大屏', to: '/dashboard' },
-  { label: '数据底板', to: '/map' },
-  { label: '仿真预演', to: '/simulation' },
-  { label: '风险预警', to: '/warning' },
+  { label: '水污染模拟', to: '/simulation' },
+  { label: '水环境业务', to: '/warning' },
   { label: '防洪四预业务', to: '/scenario' },
-  { label: '历史查询', to: '/history' },
+  { label: '水网数据库', to: '/history' },
   { label: '系统管理', to: '/admin' },
 ]
 

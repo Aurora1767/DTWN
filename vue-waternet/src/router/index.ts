@@ -14,26 +14,20 @@ const router = createRouter({
       meta: { title: '数据大屏' },
     },
     {
-      path: '/map',
-      name: 'map',
-      component: () => import('@/views/MapWorkspaceView.vue'),
-      meta: { title: '数据底板' },
-    },
-    {
       path: '/cesium',
       redirect: '/dashboard',
     },
     {
       path: '/simulation',
       name: 'simulation',
-      component: () => import('@/views/SimulationView.vue'),
-      meta: { title: '仿真预演' },
+      component: () => import('@/views/PlaceholderView.vue'),
+      meta: { title: '水污染模拟' },
     },
     {
       path: '/warning',
       name: 'warning',
       component: () => import('@/views/WarningView.vue'),
-      meta: { title: '风险预警' },
+      meta: { title: '水环境业务' },
     },
     {
       path: '/scenario',
@@ -45,7 +39,7 @@ const router = createRouter({
       path: '/history',
       name: 'history',
       component: () => import('@/views/HistoryView.vue'),
-      meta: { title: '历史查询' },
+      meta: { title: '水网数据库' },
     },
     {
       path: '/admin',

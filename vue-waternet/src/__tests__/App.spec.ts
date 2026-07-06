@@ -16,6 +16,6 @@ describe('App', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('数字孪生水网平台')
+    expect(wrapper.text()).toContain('无锡市某片区数字孪生水网系统')
   })
 })

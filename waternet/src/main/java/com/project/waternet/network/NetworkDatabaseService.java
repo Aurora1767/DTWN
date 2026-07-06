@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -228,6 +229,7 @@ public class NetworkDatabaseService {
 	}
 
 	private Optional<SegmentProfile> segmentProfile(Connection connection, String segmentCode) throws SQLException {
+		String normalizedSegmentCode = normalizeSegmentCode(segmentCode);
 		String sql = """
 				select
 				  p.segment_code,
@@ -250,7 +252,7 @@ public class NetworkDatabaseService {
 		String endNode = null;
 		Integer profileHour = null;
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, segmentCode);
+			statement.setString(1, normalizedSegmentCode);
 			try (ResultSet resultSet = statement.executeQuery()) {
 				while (resultSet.next()) {
 					reachId = getInteger(resultSet, "reach_id");
@@ -268,36 +270,28 @@ public class NetworkDatabaseService {
 		if (points.isEmpty()) {
 			return Optional.empty();
 		}
-		return Optional.of(new SegmentProfile(segmentCode, reachId, startNode, endNode, profileHour, points));
+		return Optional.of(new SegmentProfile(normalizedSegmentCode, reachId, startNode, endNode, profileHour, points));
+	}
+
+	private String normalizeSegmentCode(String segmentCode) {
+		return segmentCode != null && segmentCode.startsWith("RIVER_") ? "REAL_" + segmentCode : segmentCode;
 	}
 
 	private Optional<NodeHydrologySeries> nodeSeries(Connection connection, String nodeCode, int recentHours)
 			throws SQLException {
-		String maxHourSql = "select max(hour) as max_hour from node_hydrology_timeseries where node_code = ?";
-		Integer maxHour = null;
-		try (PreparedStatement statement = connection.prepareStatement(maxHourSql)) {
-			statement.setString(1, nodeCode);
-			try (ResultSet resultSet = statement.executeQuery()) {
-				if (resultSet.next()) {
-					maxHour = getInteger(resultSet, "max_hour");
-				}
-			}
-		}
-		if (maxHour == null) {
-			return Optional.empty();
-		}
-		int fromHour = recentHours > 0 ? Math.max(0, maxHour - recentHours + 1) : 0;
+		int limit = recentHours > 0 ? recentHours : 200;
 
 		String sql = """
 				select hour, water_level, flow
 				from node_hydrology_timeseries
-				where node_code = ? and hour >= ?
-				order by hour
+				where node_code = ?
+				order by hour desc
+				limit ?
 				""";
 		List<NodeHydrologyPoint> points = new ArrayList<>();
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, nodeCode);
-			statement.setInt(2, fromHour);
+			statement.setInt(2, limit);
 			try (ResultSet resultSet = statement.executeQuery()) {
 				while (resultSet.next()) {
 					points.add(new NodeHydrologyPoint(
@@ -310,6 +304,7 @@ public class NetworkDatabaseService {
 		if (points.isEmpty()) {
 			return Optional.empty();
 		}
+		Collections.reverse(points);
 		return Optional.of(new NodeHydrologySeries(nodeCode, points));
 	}
 

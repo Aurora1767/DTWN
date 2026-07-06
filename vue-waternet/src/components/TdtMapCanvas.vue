@@ -25,13 +25,15 @@ let waterSurfaces: GeoFeature[] = []
 let waterShorelines: GeoFeature[] = []
 let pipeShorelines: GeoFeature[] = []
 let pipeSurfaces: GeoFeature[] = []
+let surveyPoints: Array<{ fid: number; lng: number; lat: number }> = []
 const showPipeShorelines = ref(true)
 const showPipeSurfaces   = ref(true)
 const token = (import.meta.env.VITE_TIANDITU_TOKEN ?? '').trim()
-const WATER_SURFACES_URL = `${import.meta.env.BASE_URL}data/water-surfaces.geojson`
+const WATER_SURFACES_URL   = `${import.meta.env.BASE_URL}data/water-surfaces.geojson`
 const WATER_SHORELINES_URL = `${import.meta.env.BASE_URL}data/water-shorelines.geojson`
-const PIPE_SHORELINES_URL = `${import.meta.env.BASE_URL}data/pipe-shorelines.geojson`
-const PIPE_SURFACES_URL   = `${import.meta.env.BASE_URL}data/pipe-surfaces.geojson`
+const PIPE_SHORELINES_URL  = `${import.meta.env.BASE_URL}data/pipe-shorelines.geojson`
+const PIPE_SURFACES_URL    = `${import.meta.env.BASE_URL}data/pipe-surfaces.geojson`
+const SURVEY_POINTS_URL    = `${import.meta.env.BASE_URL}data/survey-points.geojson`
 const NODE_LABELS: Record<string, string> = {
   N01: '太湖',
   N03: '京杭大运河南',
@@ -151,16 +153,27 @@ function loadTdtScript(tdtToken: string) {
 }
 
 async function loadWaterBoundaryData() {
-  const [surfaces, shorelines, pipeLines, pipePolys] = await Promise.all([
+  const [surfaces, shorelines, pipeLines, pipePolys, surveyGeo] = await Promise.all([
     fetchGeoFeatures(WATER_SURFACES_URL),
     fetchGeoFeatures(WATER_SHORELINES_URL),
     fetchGeoFeatures(PIPE_SHORELINES_URL),
     fetchGeoFeatures(PIPE_SURFACES_URL),
+    fetchGeoFeatures(SURVEY_POINTS_URL),
   ])
   waterSurfaces   = surfaces
   waterShorelines = shorelines
   pipeShorelines  = pipeLines
   pipeSurfaces    = pipePolys
+  surveyPoints = surveyGeo
+    .flatMap((f) => {
+      const coords: [number, number][] =
+        f.geometry?.type === 'MultiPoint'
+          ? (f.geometry.coordinates as [number, number][])
+          : f.geometry?.type === 'Point'
+          ? [f.geometry.coordinates as [number, number]]
+          : []
+      return coords.map(([lng, lat]) => ({ fid: f.properties?.fid as number, lng, lat }))
+    })
 }
 
 async function fetchGeoFeatures(url: string) {
@@ -247,10 +260,39 @@ function drawNetwork() {  if (!map || !window.T) return
     }
   }
 
+  if (store.mapLayers.surveyPoints) {
+    for (const sp of surveyPoints) {
+      const pt = new T.LngLat(sp.lng, sp.lat)
+      const icon = new T.Icon({
+        iconUrl: buildTriangleIconUrl(),
+        iconSize: new T.Point(14, 14),
+        iconAnchor: new T.Point(7, 14),
+      })
+      const marker = new T.Marker(pt, { icon })
+      marker.addEventListener?.('click', () => {
+        const infoWindow = new T.InfoWindow(
+          `<div style="padding:4px 8px;font-size:12px;color:#fff;background:rgba(10,30,50,0.9)">测点 #${sp.fid}</div>`,
+          { minWidth: 100 },
+        )
+        map.openInfoWindow(infoWindow, pt)
+      })
+      map.addOverLay(marker)
+      overlays.push(marker)
+    }
+  }
+
   if (allPoints.length > 1) {
     map.setViewport?.(allPoints)
   }
   refreshMapSize()
+}
+
+function buildTriangleIconUrl(): string {
+  const size = 14
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 14 14">
+    <polygon points="7,0 14,14 0,14" fill="#000000" stroke="#ffffff" stroke-width="1.2"/>
+  </svg>`
+  return `data:image/svg+xml;base64,${btoa(svg)}`
 }
 
 function refreshMapSize() {
@@ -708,7 +750,16 @@ function formatNumber(value: number | null | undefined, digits: number) {
 }
 
 function formatHour(value: number | null | undefined) {
-  return typeof value === 'number' && Number.isFinite(value) ? `第 ${value} 小时` : '--'
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '--'
+  if (value > 1e8) {
+    const d = new Date(value * 1000)
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    const dd = String(d.getDate()).padStart(2, '0')
+    const hh = String(d.getHours()).padStart(2, '0')
+    const mn = String(d.getMinutes()).padStart(2, '0')
+    return `${mm}-${dd} ${hh}:${mn}`
+  }
+  return `第 ${value} 小时`
 }
 
 function buildStructurePopup(structure: HydraulicStructure) {
@@ -734,6 +785,14 @@ interface GeoFeature {
 }
 
 type GeoGeometry =
+  | {
+      type: 'Point'
+      coordinates: LngLatPair
+    }
+  | {
+      type: 'MultiPoint'
+      coordinates: LngLatPair[]
+    }
   | {
       type: 'Polygon'
       coordinates: LngLatPair[][]

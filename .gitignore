@@ -8,6 +8,8 @@ spring-run.err.log
 _*.cjs
 _*.py
 _*.js
+__pycache__/
+*.pyc
 
 # ── SQLite database (runtime data, not source) ────────────────
 waternet/data/*.db

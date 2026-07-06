@@ -6,6 +6,9 @@ import type {
   SensorSnapshot,
   SimulationResult,
   WarningEvent,
+  WaterQualityLevel,
+  WaterQualityNodeHistory,
+  WaterQualityOverview,
   WaterQuantityOverview,
 } from '@/types/platform'
 
@@ -327,6 +330,61 @@ export const mockWaterQuantityOverview: WaterQuantityOverview = {
       ['2026-07-02', 3.51, 33.9, 2.8],
     ]),
   },
+}
+
+const waterQualityLevels: WaterQualityLevel[] = ['I类', 'II类', 'III类', 'IV类', 'V类']
+
+function mockWaterQualityPoint(nodeId: number) {
+  const level = waterQualityLevels[nodeId % waterQualityLevels.length] ?? 'III类'
+  return {
+    nodeId,
+    ph: Number((6.7 + (nodeId % 18) * 0.07).toFixed(2)),
+    dissolvedOxygen: Number((7.8 - (nodeId % 7) * 0.32).toFixed(2)),
+    permanganateIndex: Number((2.1 + (nodeId % 6) * 0.42).toFixed(2)),
+    ammoniaNitrogen: Number((0.14 + (nodeId % 5) * 0.11).toFixed(2)),
+    totalPhosphorus: Number((0.03 + (nodeId % 4) * 0.035).toFixed(2)),
+    chemicalOxygenDemand: Number((9 + (nodeId % 8) * 1.8).toFixed(2)),
+    bod5: Number((1.8 + (nodeId % 6) * 0.45).toFixed(2)),
+    level,
+  }
+}
+
+const mockWaterQualityNodes = Array.from({ length: 92 }, (_, index) => mockWaterQualityPoint(index + 1))
+
+export const mockWaterQualityOverview: WaterQualityOverview = {
+  status: 'mock',
+  recordTime: new Date().toLocaleString('zh-CN', { hour12: false }),
+  live: false,
+  summary: waterQualityLevels.reduce(
+    (summary, level) => ({
+      ...summary,
+      [level]: mockWaterQualityNodes.filter((node) => node.level === level).length,
+    }),
+    {} as Record<WaterQualityLevel, number>,
+  ),
+  nodes: mockWaterQualityNodes,
+}
+
+export function mockWaterQualityHistory(nodeId = 1): WaterQualityNodeHistory {
+  const basePoint = mockWaterQualityNodes.find((node) => node.nodeId === nodeId) ?? mockWaterQualityNodes[0]!
+  return {
+    nodeId,
+    points: Array.from({ length: 24 }, (_, index) => {
+      const time = new Date(Date.now() - (23 - index) * 60 * 60 * 1000)
+      const wave = Math.sin(index / 3 + nodeId / 8)
+      return {
+        ...basePoint,
+        time: `${time.getMonth() + 1}-${String(time.getDate()).padStart(2, '0')} ${String(time.getHours()).padStart(2, '0')}:00`,
+        ph: Number((basePoint.ph + wave * 0.08).toFixed(2)),
+        dissolvedOxygen: Number((basePoint.dissolvedOxygen + wave * 0.32).toFixed(2)),
+        permanganateIndex: Number(Math.max(0, basePoint.permanganateIndex + wave * 0.22).toFixed(2)),
+        ammoniaNitrogen: Number(Math.max(0, basePoint.ammoniaNitrogen + wave * 0.04).toFixed(2)),
+        totalPhosphorus: Number(Math.max(0, basePoint.totalPhosphorus + wave * 0.01).toFixed(2)),
+        chemicalOxygenDemand: Number(Math.max(0, basePoint.chemicalOxygenDemand + wave * 1.1).toFixed(2)),
+        bod5: Number(Math.max(0, basePoint.bod5 + wave * 0.18).toFixed(2)),
+      }
+    }),
+  }
 }
 
 export const mockRainfallOverview: RainfallOverview = {

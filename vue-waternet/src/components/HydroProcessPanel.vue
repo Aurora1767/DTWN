@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 
-import { fetchHydroScenarioLatest } from '@/services/api'
-import type { HydroChannelKey, HydroScenarioSnapshot } from '@/types/platform'
+import { fetchHydroScenarioRecords, type HydroScenarioRecord } from '@/services/api'
+import type { HydroChannelKey } from '@/types/platform'
 
 interface HydroPoint {
   value: number
@@ -23,7 +23,6 @@ const channels: HydroChannelConfig[] = [
 ]
 const fallbackChannel = channels[0]!
 const plot = { width: 1200, height: 288, left: 42, right: 1168, top: 18, bottom: 250 }
-const storageKey = 'waternet:hydro-process-series'
 const zoomWindows = [12, 24, 48, 96, Number.POSITIVE_INFINITY]
 
 const props = defineProps<{ collapsed?: boolean }>()
@@ -87,10 +86,9 @@ const zoomText = computed(() => {
 })
 
 onMounted(() => {
-  restoreSeries()
-  void refreshLatest()
+  void refreshRecords()
   timer = setInterval(() => {
-    void refreshLatest()
+    void refreshRecords()
   }, 60_000)
 })
 
@@ -101,57 +99,25 @@ onBeforeUnmount(() => {
   }
 })
 
-async function refreshLatest() {
+async function refreshRecords() {
   loading.value = true
   try {
-    appendSnapshot(await fetchHydroScenarioLatest())
-    persistSeries()
+    const records = await fetchHydroScenarioRecords(96)
+    if (records.length === 0) return
+    series.taihu = records
+      .filter((r) => r.taihuValue != null)
+      .map((r) => ({ value: r.taihuValue!, timestamp: r.timestamp }))
+    series['canal-north'] = records
+      .filter((r) => r.canalNorthValue != null)
+      .map((r) => ({ value: r.canalNorthValue!, timestamp: r.timestamp }))
+    series['canal-south'] = records
+      .filter((r) => r.canalSouthValue != null)
+      .map((r) => ({ value: r.canalSouthValue!, timestamp: r.timestamp }))
+    const last = records[records.length - 1]
+    if (last) lastUpdatedAt.value = last.timestamp
   } finally {
     loading.value = false
   }
-}
-
-function appendSnapshot(snapshot: HydroScenarioSnapshot) {
-  for (const channel of channels) {
-    const value = snapshot.channels[channel.key]
-    if (!value) continue
-    const points = series[channel.key]
-    const last = points[points.length - 1]
-    if (last?.timestamp === value.timestamp && last.value === value.value) continue
-    points.push({ value: value.value, timestamp: value.timestamp })
-    if (points.length > 240) points.splice(0, points.length - 240)
-    lastUpdatedAt.value = value.timestamp
-  }
-}
-
-function restoreSeries() {
-  try {
-    const stored = JSON.parse(localStorage.getItem(storageKey) ?? '{}') as Partial<Record<HydroChannelKey, HydroPoint[]>>
-    for (const channel of channels) {
-      const points = stored[channel.key]
-      if (Array.isArray(points)) {
-        series[channel.key].push(...points.filter(isHydroPoint).slice(-240))
-      }
-    }
-  } catch {
-    localStorage.removeItem(storageKey)
-  }
-}
-
-function persistSeries() {
-  localStorage.setItem(
-    storageKey,
-    JSON.stringify({
-      taihu: series.taihu,
-      'canal-north': series['canal-north'],
-      'canal-south': series['canal-south'],
-    }),
-  )
-}
-
-function isHydroPoint(value: unknown): value is HydroPoint {
-  const point = value as HydroPoint
-  return Number.isFinite(point?.value) && typeof point?.timestamp === 'string'
 }
 
 function setActiveChannel(channel: HydroChannelKey) {

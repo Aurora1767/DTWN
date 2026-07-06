@@ -17,7 +17,7 @@ const props = defineProps<{
   yAxisTitle?: string
 }>()
 
-const plot = { width: 560, height: 220, left: 52, right: 544, top: 16, bottom: 184 }
+const plot = { width: 560, height: 216, left: 52, right: 544, top: 16, bottom: 192 }
 const hoverIndex = ref<number | null>(null)
 
 const strokeColor = computed(() => props.color ?? '#00f2ff')

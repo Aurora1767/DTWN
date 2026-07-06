@@ -1,6 +1,6 @@
 export type ViewMode = '2d' | '3d'
 
-export type MapLayerKey = 'rivers' | 'nodes' | 'structures' | 'warnings' | 'simulation'
+export type MapLayerKey = 'rivers' | 'nodes' | 'structures' | 'warnings' | 'simulation' | 'surveyPoints'
 
 export type MapLayerState = Record<MapLayerKey, boolean>
 
@@ -99,6 +99,24 @@ export interface WarningEvent {
   level: string
   status: string
   triggeredAt: string
+}
+
+export type ScenarioWarningStatus = 'PENDING' | 'CONFIRMED' | 'PROCESSED'
+
+export interface ScenarioWarningAlert {
+  id: string
+  recordId: number | null
+  sourceKey: string
+  targetName: string
+  metric: string
+  value: number
+  threshold: number
+  level: 'WARNING' | 'DANGER'
+  status: ScenarioWarningStatus
+  timeLabel: string
+  triggeredAt: string
+  confirmedAt?: string
+  processedAt?: string
 }
 
 export interface DispatchPlan {
@@ -251,6 +269,37 @@ export interface WaterQuantityOverview {
   historyByCode: Record<string, WaterHistoryPoint[]>
 }
 
+export type WaterQualityLevel = 'I类' | 'II类' | 'III类' | 'IV类' | 'V类'
+
+export interface WaterQualityPoint {
+  nodeId: number
+  ph: number
+  dissolvedOxygen: number
+  permanganateIndex: number
+  ammoniaNitrogen: number
+  totalPhosphorus: number
+  chemicalOxygenDemand: number
+  bod5: number
+  level: WaterQualityLevel
+}
+
+export interface WaterQualityOverview {
+  status: string
+  recordTime: string
+  live: boolean
+  summary: Record<WaterQualityLevel, number>
+  nodes: WaterQualityPoint[]
+}
+
+export interface WaterQualityHistoryPoint extends WaterQualityPoint {
+  time: string
+}
+
+export interface WaterQualityNodeHistory {
+  nodeId: number
+  points: WaterQualityHistoryPoint[]
+}
+
 export interface RainfallHistoryPoint {
   time: string
   upstream: number
@@ -276,8 +325,118 @@ export interface HydroScenarioSnapshot {
   channels: Record<HydroChannelKey, HydroChannelValue>
 }
 
+export interface HydroBoundarySnapshot {
+  timestamp: string
+  boundaryValues: Record<string, number>
+}
+
+export type SimulationBoundarySeries = Record<string, number[]>
+
+export interface RiverNetworkNodeResult {
+  nodeId: number
+  waterLevel: number
+  netFlow: number
+}
+
+export interface RiverNetworkReachResult {
+  reachId: number
+  startNode: number
+  endNode: number
+  length: number
+  width: number
+  inletFlow: number
+  outletFlow: number
+  avgWaterLevel: number
+  maxWaterLevel: number
+  minWaterLevel: number
+  avgFlow: number
+}
+
+export interface RiverNetworkReachProfile {
+  reachId: number
+  startNode: number
+  endNode: number
+  label: string
+  length: number
+  distances: number[]
+  waterLevels: number[]
+  flows: number[]
+}
+
+export interface RiverNetworkReachHistory {
+  reachId: number
+  startNode: number
+  endNode: number
+  label: string
+  inletFlows: number[]
+  outletFlows: number[]
+  inletWaterLevels: number[]
+  outletWaterLevels: number[]
+}
+
+export interface RiverNetworkNodeHistory {
+  nodeId: number
+  waterLevels: number[]
+  netFlows: number[]
+}
+
+export interface RiverNetworkForecastResult {
+  status: string
+  forecastHours: number
+  nSteps: number
+  dt: number
+  simulatedSeconds: number
+  timestamp: string
+  nodeHeads: Record<string, number>
+  nodeFlows: Record<string, number>
+  boundaryValues: Record<string, number>
+  nodes: RiverNetworkNodeResult[]
+  nodeHistories: RiverNetworkNodeHistory[]
+  reaches: RiverNetworkReachResult[]
+  reachProfiles: RiverNetworkReachProfile[]
+  reachHistories?: RiverNetworkReachHistory[]
+}
+
+export type ScenarioRecordType = 'forecast' | 'simulation' | 'plan'
+
+export interface ForecastRecordSummary {
+  id: number
+  calculatedAt: string
+  forecastHours: number
+  recordType?: ScenarioRecordType
+  simulationName?: string | null
+}
+
+export interface SimulationRecordSettings {
+  simulationName: string
+  simulationStartAt: string
+  forecastHours: number
+  dt: number
+  nSteps: number
+  status: string
+  boundaryValues: Record<string, number>
+  boundarySeries?: SimulationBoundarySeries | null
+  gateOpenings?: Record<string, number> | null
+}
+
+export interface ForecastRecordDetail extends ForecastRecordSummary {
+  settings?: SimulationRecordSettings | null
+  result: RiverNetworkForecastResult
+}
+
 export interface ApiResponse<T> {
   code: number
   message: string
   data: T
+}
+
+export interface GateInfo {
+  id: number
+  name: string
+  gateAssetId: number
+  pierAssetId: number
+  lng: number
+  lat: number
+  height: number
+  openingPct: number
 }

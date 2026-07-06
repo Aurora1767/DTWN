@@ -8,7 +8,7 @@ import os
 import sys
 import time
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class QWeatherService:
@@ -131,6 +131,35 @@ class QWeatherService:
 
     def fallback_weather_data(self) -> dict:
         observed_at = datetime.now().strftime("%Y-%m-%dT%H:%M:%S+08:00")
+        today = datetime.now().date()
+        daily = [
+            {
+                "fxDate": (today + timedelta(days=index)).isoformat(),
+                "textDay": text_day,
+                "textNight": text_night,
+                "tempMax": temp_max,
+                "tempMin": temp_min,
+                "windSpeedDay": wind_speed,
+                "windScaleDay": wind_scale,
+                "windDirDay": wind_dir,
+                "precip": precip,
+                "humidity": humidity,
+            }
+            for index, text_day, text_night, temp_max, temp_min, wind_speed, wind_scale, wind_dir, precip, humidity in [
+                (0, "多云", "阴", "28", "22", "3.5", "2", "东南风", "2.0", "72"),
+                (1, "小雨", "中雨", "26", "20", "4.2", "3", "东风", "12.5", "85"),
+                (2, "阴", "多云", "27", "21", "2.8", "2", "北风", "0.5", "68"),
+            ]
+        ]
+        minutely = []
+        now = datetime.now()
+        for index in range(24):
+            precip = 0.0 if index < 4 else (0.3 + index * 0.2 if index < 12 else 0.0)
+            minutely.append({
+                "fxTime": (now + timedelta(minutes=index * 5)).strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+                "precip": f"{precip:.1f}",
+                "type": "rain",
+            })
         return {
             "geo": {
                 "code": "200",
@@ -151,7 +180,7 @@ class QWeatherService:
                     "text": "【数字孪生演练】预计未来 6 小时太湖片区有明显降雨，请关注河网水位变化。",
                 }],
             },
-            "minutely": {"code": "200", "list": []},
+            "minutely": {"code": "200", "list": minutely},
             "now": {
                 "code": "200",
                 "now": {
@@ -162,7 +191,7 @@ class QWeatherService:
                     "obsTime": observed_at,
                 },
             },
-            "daily": {"code": "200", "daily": []},
+            "daily": {"code": "200", "daily": daily},
             "indices": {"code": "200", "daily": []},
             "astronomy": {"code": "200", "sunrise": "", "sunset": ""},
         }

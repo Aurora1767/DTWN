@@ -5,34 +5,47 @@ import {
   mockSimulation,
   mockStations,
   mockWarnings,
+  mockWaterQualityHistory,
+  mockWaterQualityOverview,
   mockWaterQuantityOverview,
 } from '@/data/mock'
 import type {
   ApiResponse,
   EnvironmentSnapshot,
+  ForecastRecordDetail,
+  ForecastRecordSummary,
   HistoricalSensorRecord,
+  HydroBoundarySnapshot,
   HydroScenarioSnapshot,
   NetworkOverview,
   NodeHydrologySeries,
   RainfallOverview,
+  RiverNetworkForecastResult,
   RiverSegment,
+  ScenarioRecordType,
   SegmentProfile,
   SensorSnapshot,
+  SimulationBoundarySeries,
   SimulationRequest,
   SimulationResult,
   WaterNode,
   WarningEvent,
   WaterHistoryPoint,
+  WaterQualityNodeHistory,
+  WaterQualityOverview,
   WaterQuantityOverview,
   WaterStationSnapshot,
   WeatherForecast,
 } from '@/types/platform'
+import { fetchWithTimeout } from '@/utils/fetchWithTimeout'
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? '/api'
 const RIVER_NETWORK_URL = `${import.meta.env.BASE_URL}data/river-segments-67.geojson`
 const WATER_NODES_URL = `${import.meta.env.BASE_URL}data/water-nodes.geojson`
 const NODE_TOPOLOGY_URL = `${import.meta.env.BASE_URL}data/node-topology.json`
 const HYDRO_SCENARIO_DIRECT_URL = 'https://waterlevel.gd.hydrosim.cn/api/scenario/latest'
+const FORECAST_COMPUTE_TIMEOUT_MS = 600_000
+const FORECAST_DETAIL_TIMEOUT_MS = 90_000
 
 export { API_BASE }
 
@@ -107,8 +120,9 @@ export function fetchStations() {
 }
 
 export async function fetchSegmentProfile(segmentCode: string): Promise<SegmentProfile | null> {
+  const normalizedCode = normalizeSegmentCode(segmentCode)
   try {
-    const response = await fetch(`${API_BASE}/network/segments/${encodeURIComponent(segmentCode)}/profile`)
+    const response = await fetch(`${API_BASE}/network/segments/${encodeURIComponent(normalizedCode)}/profile`)
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText}`)
     }
@@ -201,6 +215,143 @@ export function runSimulation(request: SimulationRequest) {
   return postData<SimulationResult>('/simulations/run', request, mockSimulation)
 }
 
+export async function runRiverNetworkForecast(
+  forecastHours: number,
+  calculatedAt: string,
+  signal?: AbortSignal,
+): Promise<ForecastRecordDetail> {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE}/river-network/forecast`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ forecastHours, calculatedAt, recordType: 'forecast' }),
+      signal,
+      timeoutMs: FORECAST_COMPUTE_TIMEOUT_MS,
+    })
+    if (!response.ok) {
+      let message = `${response.status} ${response.statusText}`
+      try {
+        const body = (await response.json()) as ApiResponse<ForecastRecordDetail>
+        if (body.message) {
+          message = body.message
+        }
+      } catch {
+        // ignore parse errors
+      }
+      throw new Error(message)
+    }
+    const body = (await response.json()) as ApiResponse<ForecastRecordDetail>
+    return body.data
+  } catch (error) {
+    console.warn('[waternet] river network forecast failed', error)
+    throw error
+  }
+}
+
+export async function runRiverNetworkScenarioRun(
+  recordType: Extract<ScenarioRecordType, 'simulation' | 'plan'>,
+  forecastHours: number,
+  simulationStartAt: string,
+  dt: number,
+  simulationName: string,
+  options?: {
+    boundaryValues?: Record<string, number>
+    boundarySeries?: SimulationBoundarySeries
+    gateOpenings?: Record<string, number>
+  },
+  signal?: AbortSignal,
+): Promise<ForecastRecordDetail> {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE}/river-network/forecast`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        forecastHours,
+        simulationStartAt,
+        dt,
+        simulationName,
+        recordType,
+        boundaryValues: options?.boundaryValues,
+        boundarySeries: options?.boundarySeries,
+        gateOpenings: options?.gateOpenings,
+      }),
+      signal,
+      timeoutMs: FORECAST_COMPUTE_TIMEOUT_MS,
+    })
+    if (!response.ok) {
+      let message = `${response.status} ${response.statusText}`
+      try {
+        const body = (await response.json()) as ApiResponse<ForecastRecordDetail>
+        if (body.message) {
+          message = body.message
+        }
+      } catch {
+        // ignore parse errors
+      }
+      throw new Error(message)
+    }
+    const body = (await response.json()) as ApiResponse<ForecastRecordDetail>
+    return body.data
+  } catch (error) {
+    console.warn(`[waternet] river network ${recordType} failed`, error)
+    throw error
+  }
+}
+
+export async function runRiverNetworkSimulation(
+  forecastHours: number,
+  simulationStartAt: string,
+  dt: number,
+  simulationName: string,
+  options?: {
+    boundaryValues?: Record<string, number>
+    boundarySeries?: SimulationBoundarySeries
+    gateOpenings?: Record<string, number>
+  },
+): Promise<ForecastRecordDetail> {
+  return runRiverNetworkScenarioRun(
+    'simulation',
+    forecastHours,
+    simulationStartAt,
+    dt,
+    simulationName,
+    options,
+  )
+}
+
+export function fetchForecastRecords(type: ScenarioRecordType = 'forecast') {
+  return getData<ForecastRecordSummary[]>(`/river-network/forecast-records?type=${type}`, [])
+}
+
+export async function fetchForecastRecordDetail(
+  id: number,
+  signal?: AbortSignal,
+): Promise<ForecastRecordDetail> {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE}/river-network/forecast-records/${id}`, {
+      signal,
+      timeoutMs: FORECAST_DETAIL_TIMEOUT_MS,
+    })
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const body = (await response.json()) as ApiResponse<ForecastRecordDetail>
+    return body.data
+  } catch (error) {
+    console.warn('[waternet] forecast record detail failed', error)
+    throw error
+  }
+}
+
+export async function deleteForecastRecord(id: number): Promise<void> {
+  const response = await fetch(`${API_BASE}/river-network/forecast-records/${id}`, {
+    method: 'DELETE',
+  })
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText}`)
+  }
+}
+
 export function fetchHistoryRecords(params: { nodeCode?: string; start?: string; end?: string }) {
   const query = new URLSearchParams()
   if (params.nodeCode) query.set('nodeCode', params.nodeCode)
@@ -221,6 +372,31 @@ export function historyExportUrl(params: { nodeCode?: string; start?: string; en
 
 export function fetchWaterQuantityOverview() {
   return getData<WaterQuantityOverview>('/water-quantity/overview', mockWaterQuantityOverview)
+}
+
+export function fetchWaterQualityLatest() {
+  return getData<WaterQualityOverview>('/water-quality/latest', mockWaterQualityOverview)
+}
+
+export async function fetchWaterQualityLatestLive(): Promise<WaterQualityOverview | null> {
+  try {
+    const response = await fetch(`${API_BASE}/water-quality/latest`)
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`)
+    }
+    const body = (await response.json()) as ApiResponse<WaterQualityOverview>
+    return body.data
+  } catch (error) {
+    console.warn('[waternet] water quality request failed; keeping last value', error)
+    return null
+  }
+}
+
+export function fetchWaterQualityNodeHistory(nodeId: number, hours = 24) {
+  return getData<WaterQualityNodeHistory>(
+    `/water-quality/nodes/${nodeId}/history?hours=${hours}`,
+    mockWaterQualityHistory(nodeId),
+  )
 }
 
 export function fetchWaterStations() {
@@ -252,6 +428,15 @@ export async function fetchRainfallOverviewLive(): Promise<RainfallOverview | nu
   }
 }
 
+export async function fetchHydroBoundaryAt(at: string): Promise<HydroBoundarySnapshot> {
+  const response = await fetch(`${API_BASE}/hydro-scenario/boundary-at?at=${encodeURIComponent(at)}`)
+  const body = (await response.json()) as ApiResponse<HydroBoundarySnapshot>
+  if (!response.ok || body.code !== 0) {
+    throw new Error(body.message || `${response.status} ${response.statusText}`)
+  }
+  return body.data
+}
+
 export async function fetchHydroScenarioLatest() {
   try {
     const response = await fetch(`${API_BASE}/hydro-scenario/latest`)
@@ -270,6 +455,24 @@ export async function fetchHydroScenarioLatest() {
     } catch {
       return fallbackHydroScenarioSnapshot()
     }
+  }
+}
+
+export interface HydroScenarioRecord {
+  timestamp: string
+  taihuValue: number | null
+  canalNorthValue: number | null
+  canalSouthValue: number | null
+}
+
+export async function fetchHydroScenarioRecords(pageSize = 96): Promise<HydroScenarioRecord[]> {
+  try {
+    const response = await fetch(`${API_BASE}/hydro-scenario/merged-list?page_size=${pageSize}`)
+    if (!response.ok) throw new Error(`${response.status}`)
+    const body = (await response.json()) as ApiResponse<HydroScenarioRecord[]>
+    return (body.data ?? []).slice().reverse()
+  } catch {
+    return []
   }
 }
 
@@ -345,7 +548,7 @@ function toRiverSegment(feature: RiverFeature, index: number, sourceIsWebMercato
   const fid = toFiniteNumber(feature.properties?.fid)
   const reachId = feature.properties?.reachId ?? fid
   const segmentNo = reachId ?? index + 1
-  const code = feature.properties?.code ?? `RIVER_${String(segmentNo).padStart(2, '0')}`
+  const code = normalizeSegmentCode(feature.properties?.code ?? `REAL_RIVER_${String(segmentNo).padStart(2, '0')}`)
   return {
     code,
     name: feature.properties?.name ?? `河段 ${segmentNo}`,
@@ -360,6 +563,10 @@ function toRiverSegment(feature: RiverFeature, index: number, sourceIsWebMercato
     endNodeCode: feature.properties?.endNodeCode ?? `${code}_END`,
     coordinates: line.map(([lng, lat]) => ({ lng, lat })),
   }
+}
+
+function normalizeSegmentCode(code: string) {
+  return code.startsWith('RIVER_') ? `REAL_${code}` : code
 }
 
 function toWaterNode(feature: NodeFeature, topologyMap: Record<string, NodeTopologyRecord>): WaterNode | null {
@@ -480,4 +687,60 @@ function fallbackHydroScenarioSnapshot(): HydroScenarioSnapshot {
       'canal-south': { value: 14.03, timestamp },
     },
   }
+}
+
+// Database CRUD API
+export async function dbListTables(): Promise<string[]> {
+  const res = await fetch(`${API_BASE}/database/tables`)
+  const body = (await res.json()) as ApiResponse<string[]>
+  return body.data ?? []
+}
+
+export async function dbTableSchema(table: string): Promise<Array<{ name: string; type: string; pk: number }>> {
+  const res = await fetch(`${API_BASE}/database/tables/${encodeURIComponent(table)}/schema`)
+  const body = (await res.json()) as ApiResponse<Array<{ name: string; type: string; pk: number }>>
+  return body.data ?? []
+}
+
+export async function dbQueryRows(table: string, opts: { limit?: number; offset?: number; search?: string } = {}): Promise<{ total: number; rows: Record<string, unknown>[] }> {
+  const params = new URLSearchParams()
+  if (opts.limit) params.set('limit', String(opts.limit))
+  if (opts.offset) params.set('offset', String(opts.offset))
+  if (opts.search) params.set('search', opts.search)
+  const res = await fetch(`${API_BASE}/database/tables/${encodeURIComponent(table)}/rows?${params}`)
+  const body = (await res.json()) as ApiResponse<{ total: number; rows: Record<string, unknown>[] }>
+  return body.data ?? { total: 0, rows: [] }
+}
+
+export async function dbInsertRow(table: string, row: Record<string, unknown>): Promise<string> {
+  const res = await fetch(`${API_BASE}/database/tables/${encodeURIComponent(table)}/rows`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(row),
+  })
+  const body = (await res.json()) as ApiResponse<string>
+  if (body.code !== 0) throw new Error(body.message)
+  return body.data ?? 'ok'
+}
+
+export async function dbUpdateRow(table: string, keys: Record<string, unknown>, values: Record<string, unknown>): Promise<string> {
+  const res = await fetch(`${API_BASE}/database/tables/${encodeURIComponent(table)}/rows`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ _keys: keys, _values: values }),
+  })
+  const body = (await res.json()) as ApiResponse<string>
+  if (body.code !== 0) throw new Error(body.message)
+  return body.data ?? 'ok'
+}
+
+export async function dbDeleteRow(table: string, keys: Record<string, unknown>): Promise<string> {
+  const res = await fetch(`${API_BASE}/database/tables/${encodeURIComponent(table)}/rows`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(keys),
+  })
+  const body = (await res.json()) as ApiResponse<string>
+  if (body.code !== 0) throw new Error(body.message)
+  return body.data ?? 'ok'
 }

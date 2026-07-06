@@ -4,17 +4,22 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import {
   Cartesian2,
   Cartesian3,
+  Cesium3DTileset,
   Color,
   ColorMaterialProperty,
   ConstantProperty,
   GeoJsonDataSource,
+  HeightReference,
   ImageryLayer,
   Ion,
+  LabelStyle,
   Math as CesiumMath,
+  Matrix4,
   PolylineArrowMaterialProperty,
   ScreenSpaceEventHandler,
   ScreenSpaceEventType,
   Terrain,
+  Transforms,
   UrlTemplateImageryProvider,
   VerticalOrigin,
   Viewer,
@@ -32,6 +37,7 @@ const layers = reactive({
   pipeShorelines: true,
   pipeSurfaces: true,
   flowArrows: true,
+  surveyPoints: false,
 })
 const selectedFeature = ref<SelectedFeature | null>(null)
 const detailPanelPosition = ref({ x: 0, y: 0 })
@@ -41,11 +47,15 @@ let surfaceDataSource: GeoJsonDataSource | undefined
 let shorelineDataSource: GeoJsonDataSource | undefined
 let pipeShorelinesDataSource: GeoJsonDataSource | undefined
 let pipeSurfacesDataSource: GeoJsonDataSource | undefined
+let surveyPointEntities: any[] = []
+const surveyPointsUrl = `${import.meta.env.BASE_URL}data/survey-points.geojson`
 let nodeEntities: any[] = []
 let segmentEntities: any[] = []
 let nodeHitEntities: any[] = []
 let segmentHitEntities: any[] = []
 let flowArrowEntities: any[] = []
+const gateTilesets = new Map<number, any>()
+const gateInitialMatrix = new Map<number, Matrix4>()
 let pickHandler: ScreenSpaceEventHandler | undefined
 let imageryReadyLogged = false
 let tilesIdleLogged = false
@@ -112,6 +122,23 @@ watch(
   },
 )
 
+watch(
+  () => store.selectedFeature,
+  (feature) => {
+    if (!feature) {
+      selectedFeature.value = null
+      return
+    }
+    if (feature.type === 'segment') {
+      const segment = store.network.segments.find(s => s.code === feature.code)
+      if (segment) selectedFeature.value = { type: 'segment', item: segment }
+    } else if (feature.type === 'node') {
+      const node = store.network.nodes.find(n => n.code === feature.code)
+      if (node) selectedFeature.value = { type: 'node', item: node }
+    }
+  },
+)
+
 async function initializeCesium() {
   if (!cesiumContainer.value) return
 
@@ -159,6 +186,7 @@ async function initializeCesium() {
     bindPickHandler()
     syncNetworkLayerVisibility()
     flyToWaterNetwork()
+    if (cesiumIonToken) void loadGateTilesets()
     ;(window as any).__cesiumViewer = viewer
     ;(window as any).getCameraView = () => {
       const cam = (window as any).__cesiumViewer?.camera
@@ -171,6 +199,20 @@ async function initializeCesium() {
         'heading:', (cam.heading * R).toFixed(1),
         'pitch:', (cam.pitch * R).toFixed(1)
       )
+    }
+    ;(window as any).__cesiumFlyTo = (
+      lng: number, lat: number, height: number,
+      heading: number, pitch: number,
+    ) => {
+      viewer?.camera.flyTo({
+        destination: Cartesian3.fromDegrees(lng, lat, height),
+        orientation: {
+          heading: CesiumMath.toRadians(heading),
+          pitch: CesiumMath.toRadians(pitch),
+          roll: 0,
+        },
+        duration: 2.0,
+      })
     }
   } catch (error) {
     console.warn('[waternet] Cesium scene failed to initialize', error)
@@ -281,6 +323,58 @@ async function loadWaterLayers() {
   } catch (err) {
     console.warn('[waternet] 管网图层加载失败，跳过', err)
   }
+
+  await loadSurveyPointLayer()
+}
+
+async function loadSurveyPointLayer() {
+  if (!viewer) return
+  try {
+    const resp = await fetch(surveyPointsUrl)
+    const geojson = await resp.json()
+    for (const feature of geojson.features ?? []) {
+      const coords: [number, number][] =
+        feature.geometry?.type === 'MultiPoint'
+          ? feature.geometry.coordinates
+          : feature.geometry?.type === 'Point'
+          ? [feature.geometry.coordinates]
+          : []
+      for (const [lng, lat] of coords) {
+        const entity = viewer.entities.add({
+          show: layers.surveyPoints,
+          position: Cartesian3.fromDegrees(lng, lat, 2),
+          billboard: {
+            image: buildTriangleSvg(),
+            width: 14,
+            height: 14,
+            verticalOrigin: VerticalOrigin.BOTTOM,
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          },
+          label: {
+            text: `#${feature.properties?.fid ?? ''}`,
+            font: '10px sans-serif',
+            fillColor: Color.WHITE,
+            outlineColor: Color.BLACK,
+            outlineWidth: 2,
+            style: LabelStyle.FILL_AND_OUTLINE,
+            pixelOffset: new Cartesian2(0, -18),
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            show: layers.surveyPoints,
+          },
+        })
+        surveyPointEntities.push(entity)
+      }
+    }
+  } catch (err) {
+    console.warn('[waternet] 测点图层加载失败', err)
+  }
+}
+
+function buildTriangleSvg(): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14"><polygon points="7,0 14,14 0,14" fill="#000000" stroke="#ffffff" stroke-width="1.5"/></svg>`
+  return `data:image/svg+xml;base64,${btoa(svg)}`
 }
 
 function styleSurfaces(dataSource: GeoJsonDataSource) {
@@ -366,6 +460,9 @@ function setLayerVisibility() {
   if (pipeSurfacesDataSource)   pipeSurfacesDataSource.show   = layers.pipeSurfaces
   for (const e of flowArrowEntities) {
     if (e.polyline) e.polyline.show = new ConstantProperty(layers.flowArrows)
+  }
+  for (const e of surveyPointEntities) {
+    e.show = layers.surveyPoints
   }
 }
 
@@ -682,10 +779,100 @@ function formatNumber(value: number | null | undefined, digits: number) {
 }
 
 function formatHour(value: number | null | undefined) {
-  return typeof value === 'number' && Number.isFinite(value) ? `第 ${value} 小时` : '--'
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '--'
+  // 大于 1e8 认为是 Unix 时间戳（秒），转为本地时间字符串
+  if (value > 1e8) {
+    const d = new Date(value * 1000)
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    const dd = String(d.getDate()).padStart(2, '0')
+    const hh = String(d.getHours()).padStart(2, '0')
+    const mn = String(d.getMinutes()).padStart(2, '0')
+    return `${mm}-${dd} ${hh}:${mn}`
+  }
+  return `第 ${value} 小时`
 }
 
 type SelectedFeature = { type: 'node'; item: WaterNode } | { type: 'segment'; item: RiverSegment }
+async function loadGateTilesets() {
+  if (!viewer) return
+  for (const gate of store.gates) {
+    try {
+      const tileset = await Cesium3DTileset.fromIonAssetId(gate.gateAssetId)
+      viewer.scene.primitives.add(tileset)
+      gateTilesets.set(gate.gateAssetId, tileset)
+      await new Promise<void>((resolve) => {
+        const remove = viewer!.scene.postRender.addEventListener(() => {
+          remove()
+          resolve()
+        })
+      })
+      gateInitialMatrix.set(gate.gateAssetId, Matrix4.clone(tileset.modelMatrix, new Matrix4()))
+
+      // 从 tileset 边界球心反算真实地理坐标
+      const center = tileset.boundingSphere.center
+      const cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(center)
+      const labelPos = Cartesian3.fromRadians(
+        cartographic.longitude,
+        cartographic.latitude,
+        cartographic.height + 20,
+      )
+
+      // 闸门编号标签
+      viewer.entities.add({
+        id: `gate-label-${gate.id}`,
+        position: labelPos,
+        label: {
+          text: gate.name,
+          font: '700 13px "Microsoft YaHei", sans-serif',
+          fillColor: Color.fromCssColorString('#ffffff'),
+          outlineColor: Color.fromCssColorString('#021828'),
+          outlineWidth: 3,
+          style: 2,
+          showBackground: true,
+          backgroundColor: Color.fromCssColorString('#0a2a44').withAlpha(0.82),
+          backgroundPadding: new Cartesian2(6, 4),
+          pixelOffset: new Cartesian2(0, -8),
+          verticalOrigin: VerticalOrigin.BOTTOM,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        },
+      })
+    } catch (e) {
+      console.warn('[waternet] Failed to load gate tileset', gate.name, e)
+    }
+    try {
+      const pier = await Cesium3DTileset.fromIonAssetId(gate.pierAssetId)
+      viewer.scene.primitives.add(pier)
+    } catch (e) {
+      console.warn('[waternet] Failed to load pier tileset', gate.name, e)
+    }
+  }
+  // Notify store of updater function
+  // 🚀 修正后的闸门高度更新函数：利用太湖当地真实的“冲天”向量进行垂直平移
+  ;(window as any).__updateGateHeight = (gateAssetId: number, pct: number) => {
+    const tileset = gateTilesets.get(gateAssetId)
+    if (!tileset) return
+
+    // 1. 计算实际需要上升的高度（单位：米）
+    const heightM = (pct / 100) * 5
+
+    // 2. 获取闸门模型在地球世界坐标系中的中心点位置 (Cartesian3)
+    const center = tileset.boundingSphere.center
+
+    // 3. 根据该中心点，动态计算出太湖当地的“东-北-天 (ENU)”空间坐标矩阵
+    const enuMatrix = Transforms.eastNorthUpToFixedFrame(center)
+
+    // 4. 从矩阵中精准提取出太湖当地真正“直上直下”指向天空的冲天法向量 (Up 轴)
+    // 注：在 ENU 矩阵中，第 8, 9, 10 个元素刚好代表标准的 Up 轴世界向量分量
+    const localUp = new Cartesian3(enuMatrix[8], enuMatrix[9], enuMatrix[10])
+
+    // 5. 将冲天向量乘以实际升降高度，得到世界坐标系下的精确平移向量
+    const worldTranslation = Cartesian3.multiplyByScalar(localUp, heightM, new Cartesian3())
+
+    // 6. 直接生成平移矩阵赋值给 modelMatrix，彻底停用原先引发错位的 multiplyByTranslation 逻辑
+    tileset.modelMatrix = Matrix4.fromTranslation(worldTranslation)
+  }
+}
+
 </script>
 
 <template>
@@ -707,6 +894,8 @@ type SelectedFeature = { type: 'node'; item: WaterNode } | { type: 'segment'; it
       <button type="button" :class="{ active: layers.pipeShorelines || layers.pipeSurfaces }" @click="togglePipe()">管网</button>
       <span class="layer-divider"></span>
       <button type="button" :class="{ active: layers.flowArrows }" @click="toggleLayer('flowArrows')">流向</button>
+      <span class="layer-divider"></span>
+      <button type="button" :class="{ active: layers.surveyPoints }" @click="toggleLayer('surveyPoints')">测点</button>
     </div>
 
     <aside
@@ -804,7 +993,7 @@ type SelectedFeature = { type: 'node'; item: WaterNode } | { type: 'segment'; it
   position: absolute;
   z-index: 21;
   top: 14px;
-  left: calc(50% + 74px);
+  left: calc(50% + 116px);
   display: flex;
   overflow: hidden;
   border: 1px solid rgba(80, 204, 255, 0.42);
